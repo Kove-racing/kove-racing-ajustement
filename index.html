@@ -1,0 +1,1803 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ajustement Tarifaire 450 Rally</title>
+<style>
+  /* Polices hébergées sur le site (licence SIL Open Font License) : aucune requête vers Google, conforme RGPD. */
+  /* IBM Plex Mono 400 — latin-ext */
+  @font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('assets/fonts/ibm-plex-mono-400-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* IBM Plex Mono 400 — latin */
+  @font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('assets/fonts/ibm-plex-mono-400-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* IBM Plex Mono 500 — latin-ext */
+  @font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('assets/fonts/ibm-plex-mono-500-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* IBM Plex Mono 500 — latin */
+  @font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('assets/fonts/ibm-plex-mono-500-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* IBM Plex Mono 600 — latin-ext */
+  @font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('assets/fonts/ibm-plex-mono-600-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* IBM Plex Mono 600 — latin */
+  @font-face {
+    font-family: 'IBM Plex Mono';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('assets/fonts/ibm-plex-mono-600-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* Rajdhani 500 — latin-ext */
+  @font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('assets/fonts/rajdhani-500-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* Rajdhani 500 — latin */
+  @font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('assets/fonts/rajdhani-500-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* Rajdhani 600 — latin-ext */
+  @font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('assets/fonts/rajdhani-600-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* Rajdhani 600 — latin */
+  @font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('assets/fonts/rajdhani-600-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* Rajdhani 700 — latin-ext */
+  @font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('assets/fonts/rajdhani-700-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* Rajdhani 700 — latin */
+  @font-face {
+    font-family: 'Rajdhani';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('assets/fonts/rajdhani-700-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* Work Sans 400 — latin-ext */
+  @font-face {
+    font-family: 'Work Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('assets/fonts/work-sans-var-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* Work Sans 400 — latin */
+  @font-face {
+    font-family: 'Work Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('assets/fonts/work-sans-var-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* Work Sans 500 — latin-ext */
+  @font-face {
+    font-family: 'Work Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('assets/fonts/work-sans-var-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* Work Sans 500 — latin */
+  @font-face {
+    font-family: 'Work Sans';
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url('assets/fonts/work-sans-var-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* Work Sans 600 — latin-ext */
+  @font-face {
+    font-family: 'Work Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('assets/fonts/work-sans-var-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* Work Sans 600 — latin */
+  @font-face {
+    font-family: 'Work Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-display: swap;
+    src: url('assets/fonts/work-sans-var-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+  /* Work Sans 700 — latin-ext */
+  @font-face {
+    font-family: 'Work Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('assets/fonts/work-sans-var-latin-ext.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+  }
+  /* Work Sans 700 — latin */
+  @font-face {
+    font-family: 'Work Sans';
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url('assets/fonts/work-sans-var-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  }
+
+  /* Couleurs KOVE : turquoise du logo #2DBEC4. --brand sert aux aplats (boutons, filets),
+     --accent au texte turquoise, assombri en thème clair pour rester lisible sur blanc. */
+  :root{
+    --brand:#2dbec4; --brand-ink:#05282a;
+    --ink:#14191b; --paper:#eef1f1; --surface:#ffffff; --line:#d5dcdd; --line-strong:#b9c3c4;
+    --muted:#525c5e; --accent:#00707a; --accent-dim:#d7f1f2;
+    --danger:#b3261e; --bad-bg:#f8dfdd;
+    --amber:#7f4f00; --amber-bg:#f6e8d2; --good:#276b45; --good-bg:#dcefe2;
+    --on-photo:#ffffff; --on-photo-muted:#d3dcdd; --glass:rgba(10,16,18,.55); --glass-line:rgba(255,255,255,.18);
+    --radius:12px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ink:#edf2f2; --paper:#14161a; --surface:#1b2024; --line:#2a3238; --line-strong:#3a454c;
+      --muted:#9eaaad; --accent:#2dbec4; --accent-dim:#11302f;
+      --danger:#ff7a72; --bad-bg:#3a1f1f;
+      --amber:#e0a53c; --amber-bg:#3a2f16; --good:#5fcf93; --good-bg:#173328;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#edf2f2; --paper:#14161a; --surface:#1b2024; --line:#2a3238; --line-strong:#3a454c;
+    --muted:#9eaaad; --accent:#2dbec4; --accent-dim:#11302f;
+    --danger:#ff7a72; --bad-bg:#3a1f1f;
+    --amber:#e0a53c; --amber-bg:#3a2f16; --good:#5fcf93; --good-bg:#173328;
+  }
+
+  *{box-sizing:border-box;}
+  /* Fond sombre sous la photo : le texte blanc posé dessus reste lisible même si l'image ne charge pas. */
+  body{background:#1d1a17; color:var(--ink); font-family:'Work Sans',system-ui,sans-serif; padding-inline:16px; margin:0; min-height:100vh; position:relative;}
+  /* Photo de fond : fixe, assombrie pour que le texte posé dessus reste lisible, fondue dans le fond de page en bas. */
+  body::before{content:""; position:fixed; inset:0; z-index:-1;
+    background:
+      linear-gradient(180deg, rgba(8,13,15,.50) 0%, rgba(8,13,15,.42) 30%, rgba(8,13,15,.66) 62%, rgba(8,13,15,.90) 100%),
+      url('assets/fond-rallye.webp') center 30% / cover no-repeat, #2a2420;}
+  h1,h2,h3,.display{font-family:'Rajdhani',system-ui,sans-serif; font-weight:700; letter-spacing:.01em; text-wrap:balance;}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace;}
+  a{color:var(--accent);}
+  button{font-family:inherit;}
+  #app{max-width:780px; margin:0 auto; padding-block:0 60px;}
+
+  /* En-tête posé sur la photo */
+  .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px; padding-block:18px 14px; margin-bottom:22px; flex-wrap:wrap; border-bottom:1px solid var(--glass-line); color:var(--on-photo);}
+  .brand{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .brand .logo{height:38px; width:auto; display:block;}
+  .brand .titles{display:flex; flex-direction:column; line-height:1.05; padding-left:14px; border-left:2px solid var(--brand);}
+  .brand .mark{font-family:'Rajdhani'; font-weight:700; font-size:1.25rem; letter-spacing:.06em;}
+  .brand .sub{font-size:.7rem; color:var(--on-photo-muted); text-transform:uppercase; letter-spacing:.12em;}
+  .ticket-badge{font-family:'IBM Plex Mono'; font-size:.78rem; background:var(--brand); color:var(--brand-ink); padding:5px 12px; border-radius:999px; font-weight:600;}
+
+  .banner{background:var(--glass); color:var(--on-photo-muted); border:1px solid var(--glass-line); border-left:3px solid #e0a53c; border-radius:var(--radius); padding:10px 14px; font-size:.8rem; margin-bottom:22px; line-height:1.5; backdrop-filter:blur(6px);}
+  .banner strong{color:#f3c46b;}
+
+  /* Textes posés directement sur la photo (hors cartes) */
+  #app > h2{color:var(--on-photo); font-size:1.7rem; text-shadow:0 1px 12px rgba(0,0,0,.4);}
+
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px; margin-bottom:16px; box-shadow:0 12px 40px rgba(0,0,0,.28);}
+  .card + .card{margin-top:16px;}
+
+  /* Accueil : le titre s'affiche sur la photo, le reste dans une carte */
+  .hero{background:transparent; border:none; box-shadow:none; padding:28px 0 8px; color:var(--on-photo);}
+  .hero .kicker{display:inline-block; font-family:'Rajdhani'; font-weight:700; text-transform:uppercase; letter-spacing:.14em; font-size:.82rem; color:var(--brand); margin-bottom:8px;}
+  .hero h1{font-size:clamp(2.1rem, 6vw, 3.3rem); line-height:1.02; margin:0 0 10px; text-transform:uppercase; letter-spacing:.02em; text-shadow:0 2px 18px rgba(0,0,0,.45);}
+  .hero .price-row{display:flex; align-items:baseline; gap:14px; margin:18px 0; flex-wrap:wrap;}
+  .price-old{font-family:'IBM Plex Mono'; text-decoration:line-through; color:var(--muted); font-size:1.15rem;}
+  .hero .price-old{color:var(--on-photo-muted);}
+  .price-new{font-family:'IBM Plex Mono'; font-weight:600; font-size:1.9rem; color:var(--accent);}
+  .hero .price-new{color:var(--brand);}
+  .price-tag{font-size:.74rem; text-transform:uppercase; letter-spacing:.06em; background:var(--brand); color:var(--brand-ink); padding:4px 10px; border-radius:999px; font-weight:700;}
+  .lede{color:var(--muted); font-size:.95rem; max-width:60ch; line-height:1.55;}
+  .hero .lede{color:var(--on-photo-muted); font-size:1rem; text-shadow:0 1px 8px rgba(0,0,0,.5);}
+
+  .cta-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;}
+  .btn{appearance:none; border:none; border-radius:8px; padding:12px 20px; font-weight:600; font-size:.92rem; cursor:pointer; display:inline-flex; align-items:center; gap:8px; min-height:44px;}
+  .btn-primary{background:var(--brand); color:var(--brand-ink); font-weight:700;}
+  .btn-primary:hover{filter:brightness(1.08);}
+  .btn-ghost{background:transparent; color:var(--ink); border:1px solid var(--line-strong);}
+  .btn-ghost:hover{border-color:var(--accent);}
+  .hero .btn-ghost{color:var(--on-photo); border-color:rgba(255,255,255,.55); background:rgba(0,0,0,.2);}
+  .hero .btn-ghost:hover{border-color:var(--on-photo);}
+  .btn-text{background:none; border:none; color:var(--muted); font-size:.82rem; text-decoration:underline; cursor:pointer; padding:4px 2px; min-height:24px;}
+  .btn:disabled{opacity:.45; cursor:not-allowed;}
+  .btn-sm{padding:7px 12px; font-size:.8rem; min-height:34px;}
+  .btn-danger{background:var(--bad-bg); color:var(--danger);}
+
+  .conditions{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-top:26px;}
+  .cond{border:1px solid var(--glass-line); border-top:3px solid var(--brand); border-radius:10px; padding:12px 14px; font-size:.8rem; color:var(--on-photo-muted); background:var(--glass); backdrop-filter:blur(6px); line-height:1.45;}
+  .cond b{display:block; color:var(--on-photo); font-family:'Rajdhani'; font-size:1rem; font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:.04em;}
+
+  .stepper{display:flex; gap:6px; margin-bottom:20px; overflow-x:auto; padding-bottom:4px;}
+  .step-pill{flex:1; min-width:86px; text-align:center; padding:8px 6px; border-radius:8px; border:1px solid var(--glass-line); font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:var(--on-photo-muted); background:var(--glass); white-space:nowrap; backdrop-filter:blur(6px);}
+  .step-pill .n{display:block; font-family:'IBM Plex Mono'; font-size:.95rem; color:var(--on-photo); margin-bottom:2px;}
+  .step-pill.active{border-color:var(--brand); background:var(--brand); color:var(--brand-ink); font-weight:700;}
+  .step-pill.active .n{color:var(--brand-ink);}
+  .step-pill.done{border-color:rgba(45,190,196,.55); color:var(--on-photo);}
+  .step-pill.done .n{color:var(--brand);}
+
+  label{display:block; font-size:.82rem; font-weight:600; margin-bottom:6px;}
+  .hint{font-size:.76rem; color:var(--muted); margin-top:4px;}
+  .field{margin-bottom:16px;}
+  input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],input[type=password],select,textarea{
+    width:100%; padding:10px 12px; border-radius:8px; border:1px solid var(--line-strong); background:var(--surface); color:var(--ink); font-size:.92rem; font-family:'IBM Plex Mono',monospace; min-height:44px;
+  }
+  select,textarea{font-family:'Work Sans';}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent);}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:520px){ .row2{grid-template-columns:1fr;} }
+
+  .choice-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:520px){ .choice-row{grid-template-columns:1fr;} }
+  .choice{border:1px solid var(--line-strong); border-radius:var(--radius); padding:18px; text-align:left; background:var(--surface); cursor:pointer; transition:border-color .15s, transform .15s; box-shadow:0 8px 28px rgba(0,0,0,.22);}
+  .choice:hover{border-color:var(--accent); transform:translateY(-1px);}
+  .choice.selected{border-color:var(--accent); background:var(--accent-dim); box-shadow:inset 4px 0 0 var(--brand), 0 8px 28px rgba(0,0,0,.22);}
+  .choice .t{font-family:'Rajdhani'; font-weight:700; font-size:1.15rem;}
+  .choice .d{font-size:.8rem; color:var(--muted); margin-top:4px;}
+  @media (prefers-reduced-motion: reduce){ .choice{transition:none;} .choice:hover{transform:none;} }
+
+  .msg{border-radius:8px; padding:12px 14px; font-size:.85rem; margin-bottom:14px; line-height:1.5;}
+  .msg.error{background:var(--bad-bg); color:var(--danger);}
+  .msg.ok{background:var(--good-bg); color:var(--good);}
+  .msg.info{background:var(--amber-bg); color:var(--amber);}
+
+  .file-drop{border:1px dashed var(--line-strong); border-radius:8px; padding:14px; font-size:.82rem; color:var(--muted); text-align:center; cursor:pointer;}
+  .file-drop:hover{border-color:var(--accent);}
+  .file-drop.has-file{border-style:solid; border-color:var(--good); color:var(--ink); background:var(--good-bg);}
+  input[type=file]{display:none;}
+
+  .moto-line{border:1px solid var(--line); border-left:3px solid var(--brand); border-radius:8px; padding:14px; margin-bottom:10px; background:var(--paper);}
+  .moto-line .grid3{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:10px;}
+  @media (max-width:600px){ .moto-line .grid3{grid-template-columns:1fr;} }
+  .moto-line .grid4{display:grid; grid-template-columns:1.3fr 1fr .9fr 1fr; gap:10px;}
+  @media (max-width:680px){ .moto-line .grid4{grid-template-columns:1fr 1fr;} }
+  @media (max-width:420px){ .moto-line .grid4{grid-template-columns:1fr;} }
+  .moto-line .status{font-size:.74rem; margin-top:8px;}
+
+  .badge{display:inline-block; font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; padding:3px 8px; border-radius:999px; font-weight:600;}
+  .badge.ok{background:var(--good-bg); color:var(--good);}
+  .badge.bad{background:var(--bad-bg); color:var(--danger);}
+  .badge.pending{background:var(--amber-bg); color:var(--amber);}
+
+  .recap dt{font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-top:10px;}
+  .recap dd{margin:2px 0 0; font-family:'IBM Plex Mono'; font-size:.92rem;}
+
+  .checkbox-row{display:flex; gap:10px; align-items:flex-start; font-size:.8rem; color:var(--muted); line-height:1.45;}
+  .checkbox-row input{margin-top:3px; width:18px; height:18px; accent-color:var(--accent);}
+
+  .nav-row{display:flex; justify-content:space-between; margin-top:20px; gap:10px;}
+
+  .table-scroll{overflow-x:auto; max-width:100%;}
+  table.admin{width:100%; border-collapse:collapse; font-size:.8rem;}
+  table.admin th,table.admin td{text-align:left; padding:8px 10px; border-bottom:1px solid var(--line);}
+  table.admin th{font-size:.68rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted);}
+  table.admin tr{cursor:pointer;}
+  table.admin tr:hover td{background:var(--paper);}
+
+  footer{margin-top:40px; padding-top:16px; border-top:1px solid var(--glass-line); font-size:.72rem; color:var(--on-photo-muted); display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;}
+  footer button{background:none;border:none;color:var(--on-photo-muted);text-decoration:underline;cursor:pointer;font-size:.72rem;padding:4px 0;min-height:24px;}
+  :focus-visible{outline:2px solid var(--brand); outline-offset:2px;}
+  .card :focus-visible{outline-color:var(--accent);}
+  h2[tabindex="-1"]:focus{outline:none;}
+
+  .privacy-note{font-size:.74rem; color:var(--muted); margin-top:14px; line-height:1.5;}
+  .btn-link{background:none; border:none; padding:0; color:var(--accent); text-decoration:underline; cursor:pointer; font:inherit;}
+  .legal h3{font-size:1.1rem; margin:22px 0 6px;}
+  .legal p, .legal li{font-size:.88rem; line-height:1.6; color:var(--ink);}
+  .legal ul{padding-left:20px; margin:6px 0;}
+  .legal .hint{font-size:.78rem;}
+  mark.todo{background:var(--amber-bg); color:var(--amber); padding:0 4px; border-radius:4px; font-weight:600;}
+  footer .links{display:flex; gap:14px; flex-wrap:wrap;}
+
+  @media (max-width:520px){
+    .brand .logo{height:30px;}
+    .brand .titles{padding-left:10px;}
+    .card{padding:18px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- VIN database ---------- */
+  var RAW_VIN_DATA = "";
+
+  function parseVinDb(raw){
+    var tokens = raw.split(/\s+/).filter(Boolean);
+    var db = {}, current = null;
+    for (var i=0;i<tokens.length;i++){
+      var t = tokens[i];
+      if (/^container$/i.test(t)) { current = parseInt(tokens[i+1],10); i++; continue; }
+      if (current) db[t.toUpperCase()] = current;
+    }
+    return db;
+  }
+  var VIN_DB = parseVinDb(RAW_VIN_DATA);
+  var THRESHOLD_CLIENT = 25;   // particuliers / motos déjà vendues
+  var THRESHOLD_CONCESSION = 21; // stock concessionnaire, nouveaux coloris
+  var ADMIN_PASSCODE = null; // mode démonstration uniquement (en production : compte Supabase)
+  var INTERNAL_EXCEPTION_CAP = null; // mode démonstration ; en production le plafond vient du serveur (réservé à l'admin)
+
+  // Connexion Supabase. Vides = mode démonstration (données dans ce navigateur uniquement).
+  // Renseignées automatiquement par deploy/build.js pour la version en ligne.
+  var SUPABASE_URL = "https://csagimardpwdvfybychz.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_VMegGr6eBq2Bwr6WcIJSjw_I2dWrp9v";
+  var REMOTE = !!(SUPABASE_URL && SUPABASE_KEY);
+
+  // Informations légales affichées sur la page « Données personnelles et mentions légales ».
+  // Toute valeur commençant par « [À COMPLÉTER » est surlignée sur la page tant qu'elle n'est pas remplie.
+  var LEGAL = {
+    responsable: 'TRC Racing',
+    // Source : registre national des entreprises (SIREN 807 775 184), consulté le 14/10/2026.
+    formeCapital: 'SAS au capital de 10 000 €',
+    adresse: '34 avenue Lavoisier, 63170 Aubière',
+    rcsSiret: 'RCS Clermont-Ferrand 807 775 184, SIRET 807 775 184 00037',
+    contactDonnees: 'adrien.trcracing@gmail.com',
+    directeurPublication: 'Robin Charbonnier, Président',
+    hebergeur: "GitHub, Inc. (service GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis, téléphone +1 877 448 4820",
+    dureeDossier: '3 ans après la clôture du dossier'
+  };
+
+  /* ---------- storage helpers ---------- */
+  var LS = {
+    get: function(key, def){
+      try {
+        var v = localStorage.getItem(key);
+        if (!v) return def;
+        var parsed = JSON.parse(v);
+        // Données corrompues ou d'un autre type : on repart de la valeur par défaut
+        if (Array.isArray(def) ? !Array.isArray(parsed) : (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed))) return def;
+        return parsed;
+      } catch(e){ return def; }
+    },
+    set: function(key, val){ try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch(e){ return false; } }
+  };
+  function getTickets(){ return LS.get('trc_tickets', []).filter(function(t){ return t && typeof t === 'object' && typeof t.id === 'string'; }); }
+  function saveTickets(arr){ return LS.set('trc_tickets', arr); }
+  function upsertTicket(t){
+    var arr = getTickets();
+    var i = arr.findIndex(function(x){ return x.id === t.id; });
+    t.updatedAt = Date.now();
+    if (i >= 0) arr[i] = t; else arr.push(t);
+    return saveTickets(arr);
+  }
+  function findTicket(id){ return getTickets().find(function(t){ return t.id === id; }); }
+  function nextTicketId(){
+    var n = 0;
+    try { n = parseInt(localStorage.getItem('trc_ticket_seq'), 10) || 0; } catch(e){}
+    // Le compteur peut avoir été perdu ou être en retard : on repart du plus grand numéro existant.
+    var ids = {};
+    getTickets().forEach(function(t){ ids[t.id] = true; var m = /-(\d+)$/.exec(t.id); if (m) n = Math.max(n, parseInt(m[1], 10)); });
+    var id;
+    do { n += 1; id = 'RB-' + new Date().getFullYear() + '-' + String(n).padStart(4,'0'); } while (ids[id]);
+    try { localStorage.setItem('trc_ticket_seq', String(n)); } catch(e){}
+    return id;
+  }
+  function getLocks(){ return LS.get('trc_locks', {}); }
+  function saveLocks(l){ return LS.set('trc_locks', l); }
+  function cleanExpiredLocks(){
+    var l = getLocks(), now = Date.now(), changed = false;
+    for (var vin in l){
+      if (!l[vin] || typeof l[vin] !== 'object'){ delete l[vin]; changed = true; continue; }
+      if (l[vin].status === 'verification' && now - l[vin].ts > 48*3600*1000){ delete l[vin]; changed = true; }
+    }
+    if (changed) saveLocks(l);
+    return l;
+  }
+  function isVinLocked(vin){ var l = cleanExpiredLocks(); return l[vin] || null; }
+  function lockVin(vin, ticketId){ var l = cleanExpiredLocks(); l[vin] = { status:'verification', ts: Date.now(), ticketId: ticketId }; saveLocks(l); }
+  function markVinSubmitted(vin){ var l = cleanExpiredLocks(); if (l[vin]){ l[vin].status = 'dossier_en_cours'; saveLocks(l); } }
+  function releaseVin(vin, ticketId){ var l = cleanExpiredLocks(); if (l[vin] && l[vin].ticketId === ticketId){ delete l[vin]; saveLocks(l); } }
+  function isVinLockedByOther(vin, ticketId){ var lk = isVinLocked(vin); return lk && lk.ticketId !== ticketId ? lk : null; }
+
+  /* ---------- accès aux données ----------
+     Toutes les lectures / écritures de dossiers passent par Store (promesses).
+     localStore : démonstration, tout reste dans ce navigateur.
+     remoteStore : Supabase ; les règles métier sont revérifiées par le serveur (supabase/01-schema.sql). */
+  function P(v){ return Promise.resolve(v); }
+
+  function localStore(){
+    return {
+      checkVin: function(vinRaw, mode){
+        var r = checkVinEligibility(vinRaw, mode);
+        if (r.ok) { var lk = isVinLocked(r.vin); r.locked = lk ? { ts: lk.ts } : null; }
+        return P(r);
+      },
+      reserveVin: function(vinRaw, ticket){
+        var res = checkVinEligibility(vinRaw, 'client');
+        if (!res.ok) return P(res);
+        var ownId = ticket ? ticket.id : null;
+        var lock = isVinLockedByOther(res.vin, ownId);
+        if (lock) return P({ ok:false, reason:'locked', vin: res.vin, ts: lock.ts });
+        if (ticket && ticket.vin !== res.vin) {
+          // Le client a changé de VIN : on libère l'ancien et on garde le même dossier.
+          releaseVin(ticket.vin, ticket.id);
+          ticket.vin = res.vin; ticket.container = res.container;
+        }
+        var id = ownId || nextTicketId();
+        lockVin(res.vin, id);
+        var t = ticket || { id: id, createdAt: Date.now(), profile: 'particulier', status: 'verification', vin: res.vin, container: res.container };
+        upsertTicket(t);
+        return P({ ok:true, vin: res.vin, container: res.container, ticket: t, token: null });
+      },
+      submitParticulier: function(w){
+        if (isVinLockedByOther(w.vinResult.vin, w.ticket.id)) return P({ ok:false, reason:'locked' });
+        var ticket = {
+          id: w.ticket.id, createdAt: w.ticket.createdAt, profile:'particulier', status:'en_cours',
+          vin: w.vinResult.vin, container: w.vinResult.container, country: w.country,
+          regDate: w.regDate, diffDays: w.bracket.diffDays, bracket: w.bracket.bracket,
+          docs: w.docs, coords: w.coords, cgu: w.cgu,
+          compensation: { label: w.bracket.bracket === 'lt60' ? 'Pack Westwind RW 80 + avoir 150 €' : 'Pack Westwind RW 80' }
+        };
+        if (!upsertTicket(ticket)) return P({ ok:false, reason:'storage' });
+        lockVin(ticket.vin, ticket.id);   // le verrou a pu expirer pendant la saisie
+        markVinSubmitted(ticket.vin);
+        return P({ ok:true, ticket: ticket });
+      },
+      submitPro: function(w){
+        // Re-contrôle au moment de l'envoi : un autre dossier a pu réclamer un VIN entre-temps.
+        var taken = w.motos.filter(function(m){ return isVinLocked(m.check.vin); }).map(function(m){ return m.check.vin; });
+        if (taken.length) return P({ ok:false, reason:'locked', taken: taken });
+        var id = nextTicketId();
+        var total = w.motos.reduce(function(s,m){ return s + proAvoirForRemise(m.remise); }, 0);
+        var ticket = { id: id, createdAt: Date.now(), profile:'pro', proSituation: w.proSituation, status:'en_cours', motos: w.motos.map(function(m){ return { vin:m.check.vin, container:m.check.container, achatDate:m.achatDate, remise:m.remise, factureTRC:m.factureTRC.trim() }; }), proCoords: w.proCoords, totalAvoir: total };
+        if (!upsertTicket(ticket)) return P({ ok:false, reason:'storage' });
+        w.motos.forEach(function(m){ lockVin(m.check.vin, id); markVinSubmitted(m.check.vin); });
+        return P({ ok:true, ticket: ticket });
+      },
+      submitException: function(ex, w){
+        var ctx = ex.context || {};
+        // Si un dossier « vérification » existe déjà pour ce parcours, la demande le remplace (pas de dossier orphelin).
+        var reuse = w.ticket && w.ticket.status === 'verification';
+        var id = reuse ? w.ticket.id : nextTicketId();
+        var t = {
+          id: id, createdAt: reuse ? w.ticket.createdAt : Date.now(), profile: w.profile || 'inconnu', status: 'exception_manuelle',
+          exceptionRequest: {
+            reasonLabel: ex.reasonLabel, nom: ex.nom.trim(), email: ex.email.trim(), telephone: ex.telephone.trim(), message: ex.message.trim(),
+            vin: ctx.vin, container: ctx.container, regDate: ctx.regDate, diffDays: ctx.diffDays, country: ctx.country
+          }
+        };
+        if (!upsertTicket(t)) return P({ ok:false, reason:'storage' });
+        if (ctx.vin && VIN_DB[ctx.vin] && !isVinLockedByOther(ctx.vin, id)) { lockVin(ctx.vin, id); markVinSubmitted(ctx.vin); }
+        return P({ ok:true, id: id });
+      },
+      track: function(id, contact){
+        var tk = findTicket(String(id).trim().toUpperCase());
+        return P(tk && contactMatches(tk, contact) ? tk : null);
+      },
+      resubmit: function(result, contact, up){
+        var tk = findTicket(result.id) || result;
+        if (tk.status !== 'documents_rejetes') return P({ ok:false, reason:'status', ticket: tk });
+        tk.docs = tk.docs || {};
+        if (up.carteGrise) tk.docs.carteGrise = up.carteGrise;
+        if (up.facture) tk.docs.facture = up.facture;
+        tk.status = 'en_cours'; tk.docRejectReason = '';
+        if (!upsertTicket(tk)) return P({ ok:false, reason:'storage' });
+        return P({ ok:true, ticket: tk });
+      },
+      adminLogin: function(a){ return P(a.passInput.trim() === ADMIN_PASSCODE ? { ok:true, cap: INTERNAL_EXCEPTION_CAP } : { ok:false, error:'Code incorrect.' }); },
+      adminLogout: function(){},
+      // Lecture directe à chaque affichage : un dossier créé dans un autre onglet apparaît aussitôt.
+      adminList: function(){ return getTickets().slice().sort(function(x,y){ return y.updatedAt - x.updatedAt; }); },
+      adminTicket: function(id){ return findTicket(id); },
+      adminRefresh: function(){ return P(); },
+      adminAction: function(id, action, opts){
+        var t = findTicket(id);
+        if (!t || isClosed(t)) return P({ ok:false, reason:'closed' });
+        if (action === 'validate') t.status = 'valide_cloture';
+        else if (action === 'reject_doc') { t.status = 'documents_rejetes'; t.docRejectReason = opts.reason; }
+        else if (action === 'grant_exception') { if (t.status !== 'exception_manuelle') return P({ ok:false, reason:'status' }); t.totalAvoir = opts.amount; t.status = 'valide_cloture'; }
+        else if (action === 'close_nosuite') t.status = 'rejete';
+        upsertTicket(t);
+        return P({ ok:true, ticket: t });
+      }
+    };
+  }
+
+  function remoteStore(){
+    var session = null;   // { token } du compte admin, en mémoire seulement (recharger = déconnexion)
+    var list = [], detail = null;
+    function headers(json, asAdmin){
+      var h = { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + (asAdmin && session ? session.token : SUPABASE_KEY) };
+      if (json) h['Content-Type'] = 'application/json';
+      return h;
+    }
+    function request(url, init){
+      return fetch(url, init).catch(function(){ var e = new Error('network'); e.code = 'network'; throw e; }).then(function(r){
+        return r.text().then(function(txt){
+          var body = null; try { body = txt ? JSON.parse(txt) : null; } catch(e){}
+          if (!r.ok) {
+            var err = new Error((body && (body.message || body.msg || body.error_description || body.error)) || ('HTTP ' + r.status));
+            err.status = r.status; err.code = r.status === 401 || r.status === 403 ? 'auth' : 'server'; throw err;
+          }
+          return body;
+        });
+      });
+    }
+    function rpc(fn, args, asAdmin){
+      return request(SUPABASE_URL + '/rest/v1/rpc/' + fn, { method:'POST', headers: headers(true, asAdmin), body: JSON.stringify(args || {}) });
+    }
+    function extOf(doc){
+      var m = /\.([a-z0-9]{1,5})$/i.exec(doc.name || '');
+      if (m) return m[1].toLowerCase();
+      return doc.type === 'application/pdf' ? 'pdf' : (doc.type || '').split('/')[1] || 'bin';
+    }
+    // Dépose une pièce dans « <dossier>/<jeton>/<nom>-<aléa>.<ext> » (dossier privé, l'admin seul peut la lire).
+    function upload(ticketId, token, key, doc){
+      var type = doc.type || (/\.pdf$/i.test(doc.name || '') ? 'application/pdf' : 'application/octet-stream');
+      var rand = Math.random().toString(36).slice(2, 10);
+      var path = ticketId + '/' + token + '/' + key + '-' + rand + '.' + extOf(doc);
+      return fetch(doc.dataUrl).then(function(r){ return r.blob(); }).then(function(blob){
+        return request(SUPABASE_URL + '/storage/v1/object/justificatifs/' + path.split('/').map(encodeURIComponent).join('/'),
+          { method:'POST', headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY, 'Content-Type': type, 'x-upsert': 'false' }, body: blob });
+      }).then(function(){ return { name: doc.name, type: type, size: doc.size, path: path }; });
+    }
+    function uploadAll(ticketId, token, docs){
+      var keys = Object.keys(docs).filter(function(k){ return docs[k]; });
+      return Promise.all(keys.map(function(k){ return upload(ticketId, token, k, docs[k]); })).then(function(res){
+        var out = {}; keys.forEach(function(k, i){ out[k] = res[i]; }); return out;
+      });
+    }
+    function sign(doc){
+      if (!doc || !doc.path) return P(doc);
+      return request(SUPABASE_URL + '/storage/v1/object/sign/justificatifs/' + doc.path.split('/').map(encodeURIComponent).join('/'),
+        { method:'POST', headers: headers(true, true), body: JSON.stringify({ expiresIn: 900 }) })
+        .then(function(r){ var u = r && (r.signedURL || r.signedUrl); return Object.assign({}, doc, { url: u ? SUPABASE_URL + '/storage/v1' + u : null }); })
+        .catch(function(){ return doc; });
+    }
+    function loadDetail(id){
+      return rpc('admin_get', { p_id: id }, true).then(function(t){
+        if (!t || !t.docs) return t;
+        return Promise.all([sign(t.docs.carteGrise), sign(t.docs.facture)]).then(function(d){ t.docs = { carteGrise: d[0], facture: d[1] }; return t; });
+      }).then(function(t){ detail = t; return t; });
+    }
+    return {
+      checkVin: function(vinRaw, mode){
+        var v = normalizeVin(vinRaw);
+        if (!v) return P({ ok:false, reason:'empty' });
+        return rpc('check_vin', { p_vin: v, p_mode: mode });
+      },
+      reserveVin: function(vinRaw, ticket, token){
+        var v = normalizeVin(vinRaw);
+        if (!v) return P({ ok:false, reason:'empty' });
+        return rpc('reserve_vin', { p_vin: v, p_ticket_id: ticket ? ticket.id : null, p_token: ticket ? token : null });
+      },
+      submitParticulier: function(w){
+        return uploadAll(w.ticket.id, w.token, w.docs).then(function(docs){
+          return rpc('submit_particulier', { p_ticket_id: w.ticket.id, p_token: w.token, p_data: {
+            country: w.country, regDate: w.regDate, coords: w.coords, cgu: w.cgu, docs: docs } });
+        });
+      },
+      submitPro: function(w){
+        return rpc('submit_pro', { p_data: { proSituation: w.proSituation, proCoords: w.proCoords,
+          motos: w.motos.map(function(m){ return { vin: m.check.vin, achatDate: m.achatDate, remise: m.remise, factureTRC: m.factureTRC }; }) } })
+          .catch(function(e){ if (/vin_locked_concurrently/.test(e.message)) return { ok:false, reason:'locked', taken: [] }; throw e; });
+      },
+      submitException: function(ex, w){
+        var ctx = ex.context || {};
+        var reuse = w.ticket && w.ticket.status === 'verification';
+        return rpc('submit_exception', { p_ticket_id: reuse ? w.ticket.id : null, p_token: reuse ? w.token : null, p_data: {
+          reasonLabel: ex.reasonLabel, nom: ex.nom, email: ex.email, telephone: ex.telephone, message: ex.message, profile: w.profile || '',
+          vin: ctx.vin, regDate: ctx.regDate, country: ctx.country } });
+      },
+      track: function(id, contact){ return rpc('track_ticket', { p_id: id, p_contact: contact }); },
+      resubmit: function(result, contact, up){
+        if (!result.uploadToken) return P({ ok:false, reason:'status', ticket: result });
+        var docs = {}; if (up.carteGrise) docs.carteGrise = up.carteGrise; if (up.facture) docs.facture = up.facture;
+        return uploadAll(result.id, result.uploadToken, docs).then(function(d){
+          return rpc('resubmit_docs', { p_id: result.id, p_contact: contact, p_docs: d });
+        }).then(function(r){
+          if (r && r.ok) { delete r.ok; return { ok:true, ticket: r }; }
+          if (r && r.reason === 'status') return rpc('track_ticket', { p_id: result.id, p_contact: contact }).then(function(t){ return { ok:false, reason:'status', ticket: t || result }; });
+          return { ok:false, reason: (r && r.reason) || 'server' };
+        });
+      },
+      adminLogin: function(a){
+        if (!a.email.trim() || !a.passInput) return P({ ok:false, error:'Saisissez votre email et votre mot de passe.' });
+        return request(SUPABASE_URL + '/auth/v1/token?grant_type=password', { method:'POST', headers: headers(true, false),
+          body: JSON.stringify({ email: a.email.trim(), password: a.passInput }) })
+          .then(function(r){ session = { token: r.access_token }; return rpc('admin_settings', {}, true); })
+          .then(function(s){ return { ok:true, cap: s && s.internalExceptionCap }; })
+          .catch(function(e){
+            session = null;
+            if (e.code === 'network') throw e;
+            return { ok:false, error: e.status === 400 ? 'Email ou mot de passe incorrect.' : 'Ce compte n\'a pas accès à l\'espace interne.' };
+          });
+      },
+      adminLogout: function(){ session = null; list = []; detail = null; },
+      adminList: function(){ return list; },
+      adminTicket: function(id){ return detail && detail.id === id ? detail : null; },
+      // Recharge la liste, ou la fiche ouverte, depuis le serveur.
+      adminRefresh: function(selected){
+        if (!session) return P();
+        if (selected) { detail = null; return loadDetail(selected); }
+        return rpc('admin_list', {}, true).then(function(l){ list = l || []; });
+      },
+      adminAction: function(id, action, opts){
+        return rpc('admin_action', { p_id: id, p_action: action, p_seen_updated_at: detail && detail.id === id ? detail.updatedAt : null,
+          p_reason: opts.reason || null, p_amount: opts.amount == null ? null : opts.amount }, true)
+          .then(function(r){ return loadDetail(id).then(function(){ return r; }); });
+      }
+    };
+  }
+
+  var Store = REMOTE ? remoteStore() : localStore();
+  // Message affiché quand le serveur ne répond pas ou renvoie une erreur inattendue.
+  function serverErrorMsg(e){
+    if (e && e.code === 'network') return 'Connexion au serveur impossible. Vérifiez votre connexion internet puis réessayez.';
+    return 'Le serveur n\'a pas pu traiter la demande. Merci de réessayer dans quelques instants.';
+  }
+
+  /* ---------- utils ---------- */
+  function fmtEUR(n){ return (Math.round(n*100)/100).toLocaleString('fr-FR', {style:'currency', currency:'EUR'}); }
+  function fmtDate(ts){ return new Date(ts).toLocaleDateString('fr-FR', {day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit'}); }
+  function todayISO(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+  function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  // Écart en jours calendaires (insensible aux changements d'heure été / hiver).
+  function daysSince(dateStr){ var p = String(dateStr).split('-'), now = new Date(); return Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(+p[0], +p[1]-1, +p[2])) / 864e5); }
+  function normalizeVin(v){ return String(v||'').replace(/[\s\-.]/g, '').toUpperCase(); }
+  function normalizePhone(p){ var d = String(p||'').replace(/[^\d+]/g, ''); if (d.indexOf('+33') === 0) d = '0' + d.slice(3); else if (d.indexOf('0033') === 0) d = '0' + d.slice(4); return d.replace(/\D/g, ''); }
+  function isValidEmail(e){ return /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/.test(String(e||'').trim()); }
+  function isValidPhone(p){ return normalizePhone(p).length >= 9; }
+  function checkVinEligibility(vinRaw, mode){
+    var vin = normalizeVin(vinRaw);
+    if (!vin) return { ok:false, reason:'empty' };
+    var container = VIN_DB[vin];
+    if (!container) return { ok:false, reason:'not_found', vin: vin };
+    var threshold = mode === 'concession' ? THRESHOLD_CONCESSION : THRESHOLD_CLIENT;
+    if (container < threshold) return { ok:false, reason:'container_too_old', container: container, vin: vin };
+    return { ok:true, container: container, vin: vin };
+  }
+  function fileErrorMsg(code){
+    if (code === 'too_large') return REMOTE ? 'Fichier trop volumineux (max 8 Mo). Merci de compresser le fichier.' : 'Fichier trop volumineux pour cette démonstration (max 1,5 Mo). Merci de compresser le fichier.';
+    if (code === 'bad_type') return 'Format non accepté : merci de joindre une photo ou un PDF.';
+    if (code === 'empty') return 'Ce fichier est vide, merci d\'en choisir un autre.';
+    return 'Impossible de lire ce fichier.';
+  }
+  var MAX_UPLOAD = REMOTE ? 8*1024*1024 : 1.5*1024*1024;   // 8 Mo = limite de l'espace Supabase
+  function readFileAsDataUrl(file, maxBytes){
+    return new Promise(function(resolve, reject){
+      if (!/^image\//.test(file.type) && file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) { reject({code:'bad_type'}); return; }
+      if (!file.size) { reject({code:'empty'}); return; }
+      if (file.size > maxBytes) { reject({code:'too_large'}); return; }
+      var reader = new FileReader();
+      reader.onload = function(){ resolve({ name:file.name, type:file.type, size:file.size, dataUrl: reader.result }); };
+      reader.onerror = function(){ reject({code:'read_error'}); };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /* ---------- state ---------- */
+  function initWizard(){
+    return {
+      step: 0,
+      profile: null,           // 'particulier' | 'pro'
+      proSituation: null,      // 'stock' | 'vendu'
+      vin: '', vinResult: null, ticket: null, token: null,   // token : secret du dossier côté serveur
+      country: null,
+      regDate: '', bracket: null,
+      docs: { carteGrise: null, facture: null },
+      coords: { nom:'', prenom:'', adresseFacturation:'', adresseLivraison:'', telephone:'', email:'' },
+      cgu: false,
+      motos: [ { vin:'', achatDate:'', remise:'', factureTRC:'', check:null } ],
+      proCoords: { raisonSociale:'', siret:'', telephone:'', email:'' },
+      error: '', fileError: '', formError: ''
+    };
+  }
+  function initException(){ return { open:false, reasonLabel:'', nom:'', email:'', telephone:'', message:'', sent:false, error:'', ticketId:'' }; }
+  var state = {
+    view: 'home',
+    wizard: initWizard(),
+    exception: initException(),
+    track: initTrack(),
+    admin: initAdmin(),
+    privacyFrom: 'home'
+  };
+  function initAdmin(){ return { authed:false, email:'', passInput:'', passError:'', selected:null, filter:'all', cap:null }; }
+
+  var app = document.getElementById('app');
+
+  function setPath(obj, path, value){
+    var parts = path.split('.'), o = obj;
+    for (var i=0;i<parts.length-1;i++) o = o[parts[i]];
+    o[parts[parts.length-1]] = value;
+  }
+  function getPath(obj, path){
+    var parts = path.split('.'), o = obj;
+    for (var i=0;i<parts.length;i++){ if (o == null) return undefined; o = o[parts[i]]; }
+    return o;
+  }
+
+  /* ---------- compensation logic ---------- */
+  function regBracket(dateStr){
+    if (!dateStr) return null;
+    var diff = daysSince(dateStr);
+    if (diff < 0) return { bracket:'invalid', diffDays: diff };
+    if (diff <= 60) return { bracket:'lt60', diffDays: diff };
+    if (diff <= 90) return { bracket:'60to90', diffDays: diff };
+    return { bracket:'gt90', diffDays: diff };
+  }
+  function proAvoirForRemise(remisePct){
+    var r = parseFloat(remisePct);
+    if (isNaN(r) || r < 0) r = 0;
+    if (r > 100) r = 100;
+    return Math.max(0, Math.round(700 * (1 - r/100) * 100) / 100);
+  }
+
+  /* ---------- validation ---------- */
+  function validateParticulierDocs(w){
+    var c = w.coords, missing = [];
+    if (!w.docs.carteGrise) missing.push('la carte grise');
+    if (!w.docs.facture) missing.push('la facture d\'achat');
+    if (!c.nom.trim()) missing.push('votre nom');
+    if (!c.prenom.trim()) missing.push('votre prénom');
+    if (!c.adresseFacturation.trim()) missing.push('l\'adresse de facturation');
+    if (!c.adresseLivraison.trim()) missing.push('l\'adresse de livraison');
+    if (!isValidPhone(c.telephone)) missing.push('un numéro de téléphone valide');
+    if (!isValidEmail(c.email)) missing.push('une adresse email valide');
+    if (!w.cgu) missing.push('l\'attestation sur l\'honneur (case à cocher)');
+    return missing;
+  }
+  function validateProCoords(pc){
+    var missing = [];
+    if (!pc.raisonSociale.trim()) missing.push('la raison sociale');
+    if (pc.siret.trim() && !/^\d{14}$/.test(pc.siret.replace(/\s/g, ''))) missing.push('un SIRET à 14 chiffres (ou laissez le champ vide)');
+    if (!isValidPhone(pc.telephone)) missing.push('un numéro de téléphone valide');
+    if (!isValidEmail(pc.email)) missing.push('une adresse email valide');
+    return missing;
+  }
+  function validateException(e){
+    var missing = [];
+    if (!e.nom.trim()) missing.push('votre nom');
+    if (!isValidEmail(e.email)) missing.push('une adresse email valide');
+    if (e.telephone.trim() && !isValidPhone(e.telephone)) missing.push('un numéro de téléphone valide (ou laissez le champ vide)');
+    if (!e.message.trim()) missing.push('un message expliquant votre situation');
+    return missing;
+  }
+  function missingMsg(list){ return 'Merci de renseigner : ' + list.join(', ') + '.'; }
+  // Une ligne moto est valide si son VIN a été vérifié tel qu'il est saisi, sans doublon dans le dossier.
+  function motoLineOk(w, i){
+    var m = w.motos[i];
+    if (!(m.check && m.check.ok && m.check.vin === normalizeVin(m.vin) && m.factureTRC.trim() && m.achatDate && m.achatDate <= todayISO())) return false;
+    for (var j = 0; j < i; j++) if (normalizeVin(w.motos[j].vin) === m.check.vin) return false;
+    return true;
+  }
+  function allMotosOk(w){
+    if (!w.motos.length) return false;
+    for (var i = 0; i < w.motos.length; i++) if (!motoLineOk(w, i)) return false;
+    return true;
+  }
+
+  /* ---------- stepper labels ---------- */
+  var STEPS_PARTICULIER = ['Profil','Immatriculation','Véhicule','Pays','Justificatifs','Récapitulatif'];
+  var STEPS_PRO = ['Profil','Situation','Motos','Coordonnées','Récapitulatif'];
+
+  /* ================= RENDER ================= */
+  function render(){
+    var html = '<header class="topbar"><div class="brand"><img class="logo" src="assets/logo-kove.svg" alt="KOVE Racing" width="148" height="38"><span class="titles"><span class="mark">450 RALLY</span><span class="sub">Ajustement tarifaire</span></span></div>';
+    if (state.wizard.ticket) {
+      html += '<span class="ticket-badge">Dossier ' + escapeHtml(state.wizard.ticket.id) + '</span>';
+    }
+    html += '</header>';
+
+    if (!REMOTE) html += '<div class="banner"><strong>Démonstration.</strong> Ce parcours illustre le cheminement complet (contrôle VIN, verrouillage anti-doublon, justificatifs, calcul de l\'avoir). Les dossiers et pièces jointes sont enregistrés uniquement dans ce navigateur — une mise en production nécessite de les relier à un vrai système de tickets et à un stockage sécurisé partagé.</div>';
+
+    if (state.view === 'home') html += renderHome();
+    else if (state.view === 'wizard') html += renderWizard();
+    else if (state.view === 'confirmation-particulier') html += renderConfirmationParticulier();
+    else if (state.view === 'confirmation-pro') html += renderConfirmationPro();
+    else if (state.view === 'track') html += renderTrack();
+    else if (state.view === 'admin') html += renderAdmin();
+    else if (state.view === 'privacy') html += renderPrivacy();
+
+    html += '<footer><span>KOVE / TRC Racing — Opération de réajustement 450 Rally</span>' +
+      '<span class="links"><button data-action="go-privacy">Données personnelles et mentions légales</button><button data-action="go-admin">Espace interne</button></span></footer>';
+
+    var prev = document.activeElement, key = null;
+    if (prev && app.contains(prev) && prev !== app) {
+      var d = prev.dataset;
+      key = d.action ? '[data-action="' + d.action + '"]' + (d.value ? '[data-value="' + d.value + '"]' : '') + (d.index ? '[data-index="' + d.index + '"]' : '') + (d.id ? '[data-id="' + d.id + '"]' : '')
+        : d.field ? '[data-field="' + d.field + '"]' : d.fieldCheckbox ? '[data-field-checkbox="' + d.fieldCheckbox + '"]' : null;
+    }
+    app.innerHTML = html;
+    bindEvents();
+    syncHistory();
+    if (key) {
+      var again = null;
+      try { again = app.querySelector(key); } catch(err){}
+      if (!again) { again = app.querySelector('h2'); if (again) again.setAttribute('tabindex', '-1'); }
+      if (again) again.focus({ preventScroll: !!again.matches('[data-field], [data-field-checkbox]') });
+    }
+  }
+
+  function renderHome(){
+    return '' +
+      '<div class="card hero">' +
+        '<span class="kicker">KOVE 450 Rally — Opération tarifaire</span>' +
+        '<h1>Le tarif du 450 Rally évolue</h1>' +
+        '<div class="price-row"><span class="price-old">9 990 € TTC</span><span class="price-new">9 290 € TTC</span><span class="price-tag">-700 € TTC</span></div>' +
+        '<p class="lede">Cette baisse est rendue possible par l\'augmentation des volumes de production et un taux de change EUR/USD favorable. Si vous avez acheté ou immatriculé votre 450 Rally juste avant ce changement, vous pouvez vérifier ci-dessous si vous êtes éligible à un geste commercial.</p>' +
+        '<div class="cta-row">' +
+          '<button class="btn btn-primary" data-action="start-wizard">Vérifier mon éligibilité →</button>' +
+          '<button class="btn btn-ghost" data-action="go-track">Suivre mon dossier</button>' +
+        '</div>' +
+        '<div class="conditions">' +
+          '<div class="cond"><b>France uniquement</b>Opération valable pour les motos achetées et immatriculées en France métropolitaine.</div>' +
+          '<div class="cond"><b>Numéro de série requis</b>L\'éligibilité est vérifiée moto par moto via son VIN.</div>' +
+          '<div class="cond"><b>Particuliers</b>Compensation sous forme de bagagerie Westwind RW 80, + avoir selon l\'ancienneté de la carte grise.</div>' +
+          '<div class="cond"><b>Professionnels</b>Avoir calculé sur kove-racing.com pour les motos en stock non vendues.</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function legalValue(v){
+    var e = escapeHtml(v);
+    return /^\[À COMPLÉTER/.test(v) ? '<mark class="todo">' + e + '</mark>' : e;
+  }
+
+  // Première couche d'information (art. 13 RGPD), affichée sous chaque formulaire qui collecte des données.
+  function privacyNoteHtml(){
+    return '<p class="privacy-note">Vos données sont utilisées par ' + escapeHtml(LEGAL.responsable) + ' uniquement pour traiter cette demande et prévenir la fraude. Elles ne sont ni vendues ni utilisées pour de la prospection. Vous pouvez y accéder, les corriger ou demander leur effacement. <button type="button" class="btn-link" data-action="go-privacy">En savoir plus sur vos données</button></p>';
+  }
+
+  function renderPrivacy(){
+    return '<div class="card legal">' +
+      '<h2>Données personnelles et mentions légales</h2>' +
+      '<p class="lede">Cette page explique quelles informations nous collectons dans le cadre de l\'opération d\'ajustement tarifaire 450 Rally, pourquoi, et comment exercer vos droits.</p>' +
+
+      '<h3>Qui traite vos données ?</h3>' +
+      '<p>Le responsable du traitement est <b>' + legalValue(LEGAL.responsable) + '</b>, ' + legalValue(LEGAL.formeCapital) + ', ' + legalValue(LEGAL.adresse) + ', ' + legalValue(LEGAL.rcsSiret) + '.<br>Contact pour toute question sur vos données : ' + legalValue(LEGAL.contactDonnees) + '.</p>' +
+
+      '<h3>Quelles données ?</h3>' +
+      '<ul>' +
+        '<li><b>Particuliers :</b> nom, prénom, adresses de facturation et de livraison, téléphone, email, numéro de série (VIN), date de première immatriculation, pays d\'achat, copie de la carte grise et de la facture d\'achat.</li>' +
+        '<li><b>Professionnels :</b> raison sociale, SIRET, téléphone, email, numéros de série, dates d\'achat, remises accordées et numéros de facture.</li>' +
+        '<li><b>Demande exceptionnelle :</b> nom, email, téléphone (facultatif) et votre message.</li>' +
+      '</ul>' +
+
+      '<h3>Pourquoi et sur quelle base ?</h3>' +
+      '<ul>' +
+        '<li>Examiner votre demande et vous attribuer la compensation prévue : mesures prises à votre demande (article 6.1.b du RGPD).</li>' +
+        '<li>Vérifier l\'éligibilité de la moto, éviter qu\'une même moto soit réclamée deux fois et détecter les fausses déclarations : intérêt légitime de ' + escapeHtml(LEGAL.responsable) + ' à prévenir la fraude (article 6.1.f).</li>' +
+        '<li>Conserver les pièces comptables liées à l\'avoir émis : obligation légale (article 6.1.c).</li>' +
+      '</ul>' +
+      '<p>Vos données ne servent à aucune autre fin : pas de prospection commerciale, pas de revente, pas de profilage.</p>' +
+
+      '<h3>Qui y a accès ?</h3>' +
+      '<p>Uniquement les personnes de ' + escapeHtml(LEGAL.responsable) + ' chargées de traiter les dossiers, et notre hébergeur pour le stockage technique. ' +
+        (REMOTE ? 'Vos dossiers et pièces justificatives sont stockés en France (Paris) par notre prestataire Supabase. Cette société étant établie hors de l\'Union européenne, un accès technique depuis l\'étranger reste possible ; il est encadré par les clauses contractuelles types de la Commission européenne.'
+                : 'Aucune donnée n\'est transmise hors de l\'Union européenne.') + '</p>' +
+
+      '<h3>Combien de temps ?</h3>' +
+      '<p>Votre dossier et ses pièces justificatives sont conservés ' + legalValue(LEGAL.dureeDossier) + '. Les pièces comptables liées à un avoir émis sont conservées 10 ans, comme l\'impose l\'article L123-22 du Code de commerce.</p>' +
+
+      '<h3>Vos droits</h3>' +
+      '<p>Vous pouvez demander à accéder à vos données, les rectifier, les effacer, limiter leur utilisation, vous opposer à leur traitement ou les recevoir dans un format lisible (portabilité). Écrivez à ' + legalValue(LEGAL.contactDonnees) + ' en précisant votre numéro de dossier. Nous répondons sous un mois.</p>' +
+      '<p>Si vous estimez que vos droits ne sont pas respectés, vous pouvez adresser une réclamation à la CNIL (www.cnil.fr).</p>' +
+
+      '<h3>Cookies et stockage</h3>' +
+      '<p>Ce site ne dépose aucun cookie et ne mesure pas l\'audience. Les polices de caractères et les images sont hébergées sur le site lui-même. ' +
+        (REMOTE ? 'Le seul service extérieur appelé est Supabase, pour enregistrer votre dossier et vos pièces justificatives. La page elle-même est servie par notre hébergeur (voir les mentions légales ci-dessous), qui enregistre l\'adresse IP des visiteurs dans ses journaux techniques ; aucune donnée de votre dossier ne transite par lui.'
+                : 'Il n\'appelle aucun service tiers. Dans cette version de démonstration, votre dossier est enregistré dans le stockage local de votre navigateur, uniquement pour faire fonctionner le service.') + '</p>' +
+
+      '<h3>Mentions légales</h3>' +
+      '<p>Éditeur : ' + legalValue(LEGAL.responsable) + ', ' + legalValue(LEGAL.formeCapital) + ', ' + legalValue(LEGAL.adresse) + ', ' + legalValue(LEGAL.rcsSiret) + '.<br>' +
+      'Directeur de la publication : ' + legalValue(LEGAL.directeurPublication) + '.<br>' +
+      'Hébergeur : ' + legalValue(LEGAL.hebergeur) + '.</p>' +
+
+      '<div class="nav-row"><button class="btn btn-ghost" data-action="privacy-back">← Retour</button></div>' +
+    '</div>';
+  }
+
+  function stepperHtml(labels, idx){
+    var out = '<div class="stepper">';
+    labels.forEach(function(l, i){
+      var cls = 'step-pill' + (i===idx?' active':'') + (i<idx?' done':'');
+      out += '<div class="' + cls + '"><span class="n">' + String(i+1).padStart(2,'0') + '</span>' + escapeHtml(l) + '</div>';
+    });
+    out += '</div>';
+    return out;
+  }
+
+  function renderWizard(){
+    var w = state.wizard;
+    if (state.exception.open) return renderException();
+
+    if (!w.profile) {
+      return '' +
+        '<h2>Qui êtes-vous ?</h2>' +
+        '<div class="choice-row">' +
+          '<div class="choice" data-action="pick-profile" data-value="particulier"><div class="t">Particulier</div><div class="d">J\'ai acheté ma moto pour un usage personnel.</div></div>' +
+          '<div class="choice" data-action="pick-profile" data-value="pro"><div class="t">Professionnel</div><div class="d">Concessionnaire ou revendeur.</div></div>' +
+        '</div>';
+    }
+
+    if (w.profile === 'particulier') return renderParticulier();
+    return renderPro();
+  }
+
+  function regFeedbackHtml(b){
+    var out = '';
+    if (b) {
+      if (b.bracket === 'invalid') {
+        out += '<div class="msg error" role="alert">Cette date est postérieure à aujourd\'hui, merci de la corriger.</div>';
+      } else if (b.bracket === 'lt60') {
+        out +='<div class="msg ok">Carte grise de moins de 60 jours (' + b.diffDays + ' jours). Vous êtes éligible à : le pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte) + un <b>avoir de 150 €</b> sur kove-racing.com. En cas de rupture de stock de la bagagerie, un avoir de 550 € vous sera proposé en remplacement.</div>';
+      } else if (b.bracket === '60to90') {
+        out +='<div class="msg ok">Carte grise de 60 à 90 jours (' + b.diffDays + ' jours). Vous êtes éligible au pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte). En cas de rupture de stock, un avoir de 175 € vous sera proposé en remplacement.</div>';
+      } else if (b.bracket === 'gt90') {
+        out += '<div class="msg error" role="alert">Votre carte grise date de plus de 90 jours (' + b.diffDays + ' jours). Cette opération cible les immatriculations récentes. Vous pouvez toutefois déposer une demande exceptionnelle, étudiée au cas par cas.<br><br><button class="btn btn-ghost btn-sm" data-action="open-exception" data-value="hors_delai">Faire une demande exceptionnelle</button></div>';
+      }
+    }
+    out += '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+      ((b && (b.bracket==='lt60'||b.bracket==='60to90')) ? '<button class="btn btn-primary" data-action="wizard-next">Continuer →</button>' : '') +
+      '</div>';
+    return out;
+  }
+
+  function renderParticulier(){
+    var w = state.wizard;
+    var idx = w.step;
+    var body = '';
+
+    if (idx === 1) {
+      var b = w.bracket;
+      body = '' +
+        '<h2>Date de première immatriculation</h2>' +
+        '<p class="lede">Indiquez la date figurant au repère B de votre carte grise.</p>' +
+        '<div class="field"><label for="f-reg">Date de première immatriculation</label>' +
+          '<input type="date" id="f-reg" data-field="wizard.regDate" value="' + escapeHtml(w.regDate) + '" max="' + todayISO() + '"></div>';
+      body += '<div id="reg-feedback">' + regFeedbackHtml(b) + '</div>';
+    }
+    else if (idx === 2) {
+      body = '' +
+        '<h2>Numéro de série de votre moto</h2>' +
+        '<p class="lede">Saisissez le VIN (numéro de série) figurant sur votre carte grise, repère E.</p>' +
+        (w.error ? '<div class="msg error" role="alert">' + w.error + (w.errorException ? '<br><br><button class="btn btn-ghost btn-sm" data-action="open-exception" data-value="' + w.errorException + '">Faire une demande exceptionnelle</button>' : '') + '</div>' : '') +
+        '<div class="field"><label for="f-vin">Numéro de série (VIN)</label>' +
+          '<input type="text" id="f-vin" data-field="wizard.vin" value="' + escapeHtml(w.vin) + '" placeholder="LB7SSD..." maxlength="25" autocomplete="off"></div>' +
+        '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+        '<button class="btn btn-primary" data-action="check-vin-particulier">Vérifier ce VIN</button></div>';
+    }
+    else if (idx === 3) {
+      body = '' +
+        '<h2>Pays d\'achat</h2>' +
+        '<p class="lede">Votre moto a-t-elle été achetée et est-elle immatriculée en France métropolitaine ?</p>' +
+        '<div class="choice-row">' +
+          '<div class="choice' + (w.country==='fr'?' selected':'') + '" data-action="pick-country" data-value="fr"><div class="t">Oui, France métropolitaine</div></div>' +
+          '<div class="choice' + (w.country==='etranger'?' selected':'') + '" data-action="pick-country" data-value="etranger"><div class="t">Non, achetée/immatriculée à l\'étranger</div></div>' +
+        '</div>' +
+        (w.country === 'etranger' ? '<div class="msg error" role="alert">Cette opération est réservée aux motos achetées et immatriculées en France métropolitaine. Aucun geste commercial automatique ne peut être appliqué à votre dossier.<br><br><button class="btn btn-ghost btn-sm" data-action="open-exception" data-value="vente_etranger">Faire une demande exceptionnelle</button></div>' : '') +
+        '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+        (w.country==='fr' ? '<button class="btn btn-primary" data-action="wizard-next">Continuer →</button>' : '') +
+        '</div>';
+    }
+    else if (idx === 4) {
+      body = renderDocsAndCoords();
+    }
+    else if (idx === 5) {
+      body = renderRecapParticulier();
+    }
+
+    return stepperHtml(STEPS_PARTICULIER, idx) + '<div class="card">' + body + '</div>';
+  }
+
+  function renderDocsAndCoords(){
+    var w = state.wizard;
+    var cg = w.docs.carteGrise, fa = w.docs.facture;
+    var c = w.coords;
+    return '' +
+      '<h2>Justificatifs et coordonnées</h2>' +
+      (w.fileError ? '<div class="msg error" role="alert">' + w.fileError + '</div>' : '') +
+      (w.formError ? '<div class="msg error" role="alert">' + escapeHtml(w.formError) + '</div>' : '') +
+      '<div class="row2">' +
+        '<div class="field"><label>Carte grise (photo ou PDF)</label>' +
+          '<label class="file-drop' + (cg?' has-file':'') + '">' + (cg ? ('✓ ' + escapeHtml(cg.name)) : 'Cliquer pour joindre un fichier') +
+          '<input type="file" accept="image/*,.pdf" data-upload="carteGrise"></label></div>' +
+        '<div class="field"><label>Facture d\'achat (photo ou PDF)</label>' +
+          '<label class="file-drop' + (fa?' has-file':'') + '">' + (fa ? ('✓ ' + escapeHtml(fa.name)) : 'Cliquer pour joindre un fichier') +
+          '<input type="file" accept="image/*,.pdf" data-upload="facture"></label></div>' +
+      '</div>' +
+      '<div class="row2">' +
+        '<div class="field"><label>Nom</label><input type="text" style="font-family:inherit" data-field="wizard.coords.nom" value="' + escapeHtml(c.nom) + '"></div>' +
+        '<div class="field"><label>Prénom</label><input type="text" style="font-family:inherit" data-field="wizard.coords.prenom" value="' + escapeHtml(c.prenom) + '"></div>' +
+      '</div>' +
+      '<div class="field"><label>Adresse de facturation</label><input type="text" style="font-family:inherit" data-field="wizard.coords.adresseFacturation" value="' + escapeHtml(c.adresseFacturation) + '"></div>' +
+      '<div class="field"><label>Adresse de livraison de la bagagerie</label><input type="text" style="font-family:inherit" data-field="wizard.coords.adresseLivraison" value="' + escapeHtml(c.adresseLivraison) + '"></div>' +
+      '<div class="row2">' +
+        '<div class="field"><label>Téléphone</label><input type="tel" style="font-family:inherit" data-field="wizard.coords.telephone" value="' + escapeHtml(c.telephone) + '"></div>' +
+        '<div class="field"><label>Email</label><input type="email" style="font-family:inherit" data-field="wizard.coords.email" value="' + escapeHtml(c.email) + '"></div>' +
+      '</div>' +
+      '<label class="checkbox-row"><input type="checkbox" data-field-checkbox="wizard.cgu" ' + (w.cgu?'checked':'') + '>Je certifie sur l\'honneur l\'exactitude de la date renseignée. Toute fausse déclaration entraînera le rejet définitif du dossier sans possibilité de recours.</label>' +
+      privacyNoteHtml() +
+      '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+      '<button class="btn btn-primary" data-action="wizard-next">Continuer →</button></div>';
+  }
+
+  function renderRecapParticulier(){
+    var w = state.wizard, b = w.bracket, c = w.coords;
+    var compLabel = b.bracket === 'lt60' ? 'Pack Westwind RW 80 + avoir de 150 € (ou avoir de 550 € si rupture de stock)' : 'Pack Westwind RW 80 (ou avoir de 175 € si rupture de stock)';
+    return '' +
+      '<h2>Récapitulatif</h2>' +
+      '<dl class="recap">' +
+        '<dt>Numéro de série</dt><dd>' + escapeHtml(w.vinResult.vin) + ' (container ' + w.vinResult.container + ')</dd>' +
+        '<dt>Immatriculation</dt><dd>' + escapeHtml(w.regDate) + ' — ' + b.diffDays + ' jours</dd>' +
+        '<dt>Compensation prévisionnelle</dt><dd>' + compLabel + '</dd>' +
+        '<dt>Nom</dt><dd>' + escapeHtml(c.prenom) + ' ' + escapeHtml(c.nom) + '</dd>' +
+        '<dt>Contact</dt><dd>' + escapeHtml(c.email) + ' — ' + escapeHtml(c.telephone) + '</dd>' +
+        '<dt>Livraison</dt><dd>' + escapeHtml(c.adresseLivraison) + '</dd>' +
+        '<dt>Pièces jointes</dt><dd>' + (w.docs.carteGrise?'✓ Carte grise ':'✗ Carte grise ') + (w.docs.facture?'✓ Facture':'✗ Facture') + '</dd>' +
+      '</dl>' +
+      '<p class="hint">Votre dossier sera vérifié par nos équipes (concordance nom/adresse entre facture, carte grise et livraison). La couleur de la bagagerie (Sable ou Noir) est attribuée par nos équipes selon les stocks disponibles.</p>' +
+      '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+      '<button class="btn btn-primary" data-action="submit-particulier">Envoyer ma demande</button></div>';
+  }
+
+  function renderPro(){
+    var w = state.wizard, idx = w.step, body = '';
+
+    if (idx === 1) {
+      body = '' +
+        '<h2>Situation de la ou des motos</h2>' +
+        '<div class="choice-row">' +
+          '<div class="choice' + (w.proSituation==='stock'?' selected':'') + '" data-action="pick-pro-situation" data-value="stock"><div class="t">En stock, invendue(s)</div><div class="d">Vos motos sont toujours chez vous, non livrées à un client final.</div></div>' +
+          '<div class="choice' + (w.proSituation==='vendu'?' selected':'') + '" data-action="pick-pro-situation" data-value="vendu"><div class="t">Déjà vendue à un client</div><div class="d">La moto a déjà été livrée à un client particulier.</div></div>' +
+        '</div>' +
+        (w.proSituation === 'vendu' ? '<div class="msg info">Les réclamations concernant une moto déjà vendue à un client final doivent être déposées directement par votre client, en tant que particulier, sur ce même site. En tant que concessionnaire, vous n\'avez pas à traiter cette demande.</div>' : '') +
+        '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+        (w.proSituation === 'stock' ? '<button class="btn btn-primary" data-action="wizard-next">Continuer →</button>' : '') +
+        (w.proSituation === 'vendu' ? '<button class="btn btn-ghost" data-action="go-home">Retour à l\'accueil</button>' : '') +
+        '</div>';
+    }
+    else if (idx === 2) {
+      body = renderMotosLines();
+    }
+    else if (idx === 3) {
+      var pc = w.proCoords;
+      body = '' +
+        '<h2>Coordonnées</h2>' +
+        (w.formError ? '<div class="msg error" role="alert">' + escapeHtml(w.formError) + '</div>' : '') +
+        '<div class="field"><label>Raison sociale</label><input type="text" style="font-family:inherit" data-field="wizard.proCoords.raisonSociale" value="' + escapeHtml(pc.raisonSociale) + '"></div>' +
+        '<div class="row2">' +
+          '<div class="field"><label>SIRET (facultatif)</label><input type="text" data-field="wizard.proCoords.siret" value="' + escapeHtml(pc.siret) + '"></div>' +
+          '<div class="field"><label>Téléphone</label><input type="tel" style="font-family:inherit" data-field="wizard.proCoords.telephone" value="' + escapeHtml(pc.telephone) + '"></div>' +
+        '</div>' +
+        '<div class="field"><label>Email</label><input type="email" style="font-family:inherit" data-field="wizard.proCoords.email" value="' + escapeHtml(pc.email) + '"></div>' +
+        privacyNoteHtml() +
+        '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+        '<button class="btn btn-primary" data-action="wizard-next">Continuer →</button></div>';
+    }
+    else if (idx === 4) {
+      body = renderRecapPro();
+    }
+
+    return stepperHtml(STEPS_PRO, idx) + '<div class="card">' + body + '</div>';
+  }
+
+  function renderMotosLines(){
+    var w = state.wizard;
+    var out = '<h2>Motos concernées</h2><p class="lede">Ajoutez chaque moto de votre stock invendu concernée par cette opération (container 21 et suivants, nouveaux coloris).</p>';
+    w.motos.forEach(function(m, i){
+      var statusHtml = '';
+      if (m.check) {
+        if (m.check.ok) statusHtml = '<span class="badge ok">Éligible — container ' + m.check.container + '</span>';
+        else if (m.check.reason === 'not_found') statusHtml = '<span class="badge bad">VIN non reconnu</span>';
+        else if (m.check.reason === 'container_too_old') statusHtml = '<span class="badge bad">Container ' + m.check.container + ' — hors périmètre (à partir du 21)</span>';
+        else if (m.check.reason === 'locked') statusHtml = '<span class="badge pending">Dossier déjà en cours pour ce VIN</span>';
+        else if (m.check.reason === 'duplicate') statusHtml = '<span class="badge bad">VIN déjà saisi sur une autre ligne de ce dossier</span>';
+        else if (m.check.reason === 'date_future') statusHtml = '<span class="badge bad">Date d\'achat dans le futur</span>';
+        else if (m.check.reason === 'empty') statusHtml = '<span class="badge bad">Saisissez un numéro de série</span>';
+      }
+      var avoirPreview = (m.check && m.check.ok && m.check.vin === normalizeVin(m.vin)) ? ('<span class="hint">Avoir estimé : <b>' + fmtEUR(proAvoirForRemise(m.remise)) + '</b></span>') : '';
+      out += '<div class="moto-line">' +
+        '<div class="grid4">' +
+          '<div><label>N° de série (VIN)</label><input type="text" data-field="wizard.motos.' + i + '.vin" value="' + escapeHtml(m.vin) + '"></div>' +
+          '<div><label>Date d\'achat</label><input type="date" data-field="wizard.motos.' + i + '.achatDate" value="' + escapeHtml(m.achatDate) + '" max="' + todayISO() + '"></div>' +
+          '<div><label>Remise déjà accordée (%)</label><input type="number" min="0" max="100" data-field="wizard.motos.' + i + '.remise" value="' + escapeHtml(m.remise) + '"></div>' +
+          '<div><label>N° facture TRC</label><input type="text" data-field="wizard.motos.' + i + '.factureTRC" value="' + escapeHtml(m.factureTRC) + '"></div>' +
+        '</div>' +
+        '<div class="status">' + statusHtml + ' ' + avoirPreview + '</div>' +
+        '<div style="margin-top:8px; display:flex; gap:8px;">' +
+          '<button class="btn btn-ghost btn-sm" data-action="check-moto-line" data-index="' + i + '">Vérifier ce VIN</button>' +
+          (w.motos.length > 1 ? '<button class="btn btn-ghost btn-sm" data-action="remove-moto-line" data-index="' + i + '">Retirer</button>' : '') +
+        '</div>' +
+      '</div>';
+    });
+    out += '<button class="btn btn-ghost btn-sm" data-action="add-moto-line">+ Ajouter une moto</button>';
+    if (w.formError) out += '<div class="msg error" role="alert" style="margin-top:14px;">' + escapeHtml(w.formError) + '</div>';
+    var allOk = allMotosOk(w);
+    out += '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+      '<button class="btn btn-primary" data-action="wizard-next" ' + (allOk?'':'disabled') + '>Continuer →</button></div>';
+    if (!allOk) out += '<p class="hint">Toutes les motos doivent être vérifiées comme éligibles et disposer d\'une date d\'achat et d\'un numéro de facture TRC pour continuer. Après toute modification d\'un VIN, cliquez à nouveau sur « Vérifier ce VIN ».</p>';
+    return out;
+  }
+
+  function renderRecapPro(){
+    var w = state.wizard;
+    var total = w.motos.reduce(function(s,m){ return s + proAvoirForRemise(m.remise); }, 0);
+    var rows = w.motos.map(function(m){
+      return '<tr><td class="mono">' + escapeHtml(m.check ? m.check.vin : normalizeVin(m.vin)) + '</td><td>' + escapeHtml(m.achatDate) + '</td><td>' + escapeHtml(m.remise) + ' %</td><td>' + escapeHtml(m.factureTRC) + '</td><td>' + fmtEUR(proAvoirForRemise(m.remise)) + '</td></tr>';
+    }).join('');
+    return '' +
+      '<h2>Récapitulatif</h2>' +
+      '<div class="table-scroll"><table class="admin"><thead><tr><th>VIN</th><th>Date d\'achat</th><th>Remise</th><th>Facture TRC</th><th>Avoir</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<p style="margin-top:14px;"><b>Total avoir estimé : ' + fmtEUR(total) + '</b></p>' +
+      '<p class="hint">Formule appliquée : Avoir = 700 € × (1 − remise déjà accordée). Montant délivré sous forme de bon d\'achat consommable sur kove-racing.com après validation par nos équipes.</p>' +
+      '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
+      '<button class="btn btn-primary" data-action="submit-pro">Envoyer ma demande</button></div>';
+  }
+
+  function renderConfirmationParticulier(){
+    var t = state.wizard.ticket;
+    return '<div class="card">' +
+      '<h2>Demande envoyée</h2>' +
+      '<p class="lede">Votre dossier <span class="mono">' + escapeHtml(t.id) + '</span> a bien été enregistré et est en cours de vérification par nos équipes. Vous serez contacté par email dès validation.</p>' +
+      '<dl class="recap"><dt>Compensation prévisionnelle</dt><dd>' + escapeHtml(t.compensation.label) + '</dd></dl>' +
+      '<p class="hint">Conservez votre numéro de dossier pour suivre son avancement.</p>' +
+      '<div class="cta-row"><button class="btn btn-primary" data-action="go-track">Suivre mon dossier</button>' +
+      '<button class="btn btn-ghost" data-action="go-home">Retour à l\'accueil</button></div>' +
+    '</div>';
+  }
+
+  function renderConfirmationPro(){
+    var t = state.wizard.ticket;
+    return '<div class="card">' +
+      '<h2>Demande envoyée</h2>' +
+      '<p class="lede">Votre dossier <span class="mono">' + escapeHtml(t.id) + '</span> regroupant ' + t.motos.length + ' moto(s) a bien été enregistré et est en cours de vérification.</p>' +
+      '<dl class="recap"><dt>Total avoir estimé</dt><dd>' + fmtEUR(t.totalAvoir) + '</dd></dl>' +
+      '<p class="hint">L\'avoir sera émis sous forme de bon d\'achat consommable sur kove-racing.com après validation de votre dossier.</p>' +
+      '<div class="cta-row"><button class="btn btn-primary" data-action="go-track">Suivre mon dossier</button>' +
+      '<button class="btn btn-ghost" data-action="go-home">Retour à l\'accueil</button></div>' +
+    '</div>';
+  }
+
+  function renderException(){
+    var e = state.exception;
+    if (e.sent) {
+      return '<div class="card"><h2>Demande transmise</h2><p class="lede">Votre demande exceptionnelle <span class="mono">' + escapeHtml(e.ticketId) + '</span> a été enregistrée. Un conseiller l\'étudiera au cas par cas et reviendra vers vous par email.</p><p class="hint">Conservez ce numéro de dossier pour suivre son avancement.</p><button class="btn btn-primary" data-action="go-home">Retour à l\'accueil</button></div>';
+    }
+    return '<div class="card">' +
+      '<h2>Demande exceptionnelle</h2>' +
+      '<p class="lede">Votre dossier ne remplit pas les critères automatiques de cette opération. Vous pouvez néanmoins soumettre une demande, qui sera étudiée au cas par cas par nos équipes.</p>' +
+      (e.error ? '<div class="msg error" role="alert">' + escapeHtml(e.error) + '</div>' : '') +
+      '<div class="field"><label>Nom</label><input type="text" style="font-family:inherit" data-field="exception.nom" value="' + escapeHtml(e.nom) + '"></div>' +
+      '<div class="row2">' +
+        '<div class="field"><label>Email</label><input type="email" style="font-family:inherit" data-field="exception.email" value="' + escapeHtml(e.email) + '"></div>' +
+        '<div class="field"><label>Téléphone (facultatif)</label><input type="tel" style="font-family:inherit" data-field="exception.telephone" value="' + escapeHtml(e.telephone) + '"></div>' +
+      '</div>' +
+      '<div class="field"><label>Votre message</label><textarea rows="4" data-field="exception.message">' + escapeHtml(e.message) + '</textarea></div>' +
+      privacyNoteHtml() +
+      '<div class="nav-row"><button class="btn btn-ghost" data-action="close-exception">Annuler</button>' +
+      '<button class="btn btn-primary" data-action="send-exception">Envoyer ma demande</button></div>' +
+    '</div>';
+  }
+
+  function renderTrack(){
+    var t = state.track;
+    var out = '<h2>Suivre mon dossier</h2>';
+    if (!t.result) {
+      out += '<div class="card">' +
+        (t.error ? '<div class="msg error" role="alert">' + t.error + '</div>' : '') +
+        '<div class="field"><label>Numéro de dossier</label><input type="text" data-field="track.ticketId" value="' + escapeHtml(t.ticketId) + '" placeholder="RB-2026-0001"></div>' +
+        '<div class="field"><label>Email ou téléphone utilisé lors de la demande</label><input type="text" data-field="track.contact" value="' + escapeHtml(t.contact) + '"></div>' +
+        '<div class="nav-row"><button class="btn btn-ghost" data-action="go-home">← Accueil</button><button class="btn btn-primary" data-action="track-lookup">Rechercher</button></div>' +
+      '</div>';
+    } else {
+      var tk = t.result;
+      out += '<div class="card"><h3 class="mono">' + escapeHtml(tk.id) + '</h3>' + statusBadge(tk.status) +
+        '<dl class="recap">' +
+        '<dt>Créé le</dt><dd>' + fmtDate(tk.createdAt) + '</dd>' +
+        '<dt>Dernière mise à jour</dt><dd>' + fmtDate(tk.updatedAt) + '</dd>';
+      if (tk.docRejectReason) out += '<dt>Motif du rejet de document</dt><dd>' + escapeHtml(tk.docRejectReason) + '</dd>';
+      if (tk.compensation) out += '<dt>Compensation</dt><dd>' + escapeHtml(tk.compensation.label) + '</dd>';
+      if (tk.totalAvoir) out += '<dt>Avoir</dt><dd>' + fmtEUR(tk.totalAvoir) + '</dd>';
+      out += '</dl>';
+      if (tk.status === 'documents_rejetes') {
+        out += '<div class="msg error" role="alert">Un document est non conforme ou illisible. Merci de le remplacer ci-dessous.</div>' +
+          '<div class="field"><label>Remplacer la carte grise</label><label class="file-drop"><span data-reupload-label="carteGrise">' + (t.reupload.carteGrise ? '✓ ' + escapeHtml(t.reupload.carteGrise.name) : 'Cliquer pour joindre un fichier') + '</span><input type="file" accept="image/*,.pdf" data-reupload="carteGrise"></label></div>' +
+          '<div class="field"><label>Remplacer la facture</label><label class="file-drop"><span data-reupload-label="facture">' + (t.reupload.facture ? '✓ ' + escapeHtml(t.reupload.facture.name) : 'Cliquer pour joindre un fichier') + '</span><input type="file" accept="image/*,.pdf" data-reupload="facture"></label></div>' +
+          (t.reuploadError ? '<div class="msg error" role="alert">' + escapeHtml(t.reuploadError) + '</div>' : '') +
+          '<button class="btn btn-primary btn-sm" data-action="track-resubmit">Renvoyer les documents</button>';
+      } else if (tk.status === 'valide_cloture') {
+        out += '<div class="msg ok">Ce dossier est validé et clôturé. Aucun nouveau message ne peut être envoyé.</div>';
+      } else if (tk.status === 'rejete') {
+        out += '<div class="msg error" role="alert">Après étude, votre dossier a été clôturé sans suite. Aucun geste commercial ne peut être appliqué.</div>';
+      } else {
+        out += '<div class="msg info">Votre dossier est en cours de traitement par nos équipes.</div>';
+      }
+      out += '<div class="nav-row"><button class="btn btn-ghost" data-action="track-reset">← Nouvelle recherche</button></div></div>';
+    }
+    return out;
+  }
+
+  function statusBadge(status){
+    var map = {
+      verification: ['pending','Vérification en cours'],
+      en_cours: ['pending','Dossier en cours'],
+      documents_rejetes: ['bad','Document à remplacer'],
+      valide_cloture: ['ok','Validé et clôturé'],
+      hors_delai: ['bad','Hors délai'],
+      exception_manuelle: ['pending','Demande exceptionnelle'],
+      redirige_particulier: ['bad','À déposer par le client final'],
+      rejete: ['bad','Clôturé sans suite']
+    };
+    var m = map[status] || ['pending', escapeHtml(status)];
+    return '<span class="badge ' + m[0] + '">' + m[1] + '</span>';
+  }
+
+  function renderAdmin(){
+    var a = state.admin;
+    if (!a.authed) {
+      if (REMOTE) return '<div class="card"><h2>Espace interne</h2>' +
+        '<p class="lede">Accès réservé aux équipes TRC.</p>' +
+        (a.passError ? '<div class="msg error" role="alert">' + escapeHtml(a.passError) + '</div>' : '') +
+        '<div class="field"><label for="admin-email">Email</label><input id="admin-email" type="email" autocomplete="username" style="font-family:inherit" data-field="admin.email" value="' + escapeHtml(a.email) + '"></div>' +
+        '<div class="field"><label for="admin-pass">Mot de passe</label><input id="admin-pass" type="password" autocomplete="current-password" data-field="admin.passInput" value="' + escapeHtml(a.passInput) + '"></div>' +
+        '<div class="nav-row"><button class="btn btn-ghost" data-action="go-home">← Accueil</button><button class="btn btn-primary" data-action="admin-login">Se connecter</button></div></div>';
+      return '<div class="card"><h2>Espace interne (démonstration)</h2>' +
+        '<p class="lede">Accès réservé aux équipes TRC. Ce mot de passe est fourni ici uniquement pour la démonstration : <span class="mono">' + ADMIN_PASSCODE + '</span>.</p>' +
+        (a.passError ? '<div class="msg error" role="alert">' + a.passError + '</div>' : '') +
+        '<div class="field"><label>Code d\'accès</label><input type="password" autocomplete="off" data-field="admin.passInput" value="' + escapeHtml(a.passInput) + '"></div>' +
+        '<div class="nav-row"><button class="btn btn-ghost" data-action="go-home">← Accueil</button><button class="btn btn-primary" data-action="admin-login">Entrer</button></div></div>';
+    }
+    if (a.selected) return renderAdminDetail(a.selected);
+    var tickets = Store.adminList();
+    var rows = tickets.map(function(t){
+      return '<tr data-action="admin-open" data-id="' + escapeHtml(t.id) + '"><td class="mono">' + escapeHtml(t.id) + '</td><td>' + escapeHtml(t.profile) + '</td><td>' + statusBadge(t.status) + '</td><td>' + fmtDate(t.updatedAt) + '</td></tr>';
+    }).join('');
+    return '<div class="card"><h2>Dossiers (' + tickets.length + ')</h2>' +
+      (tickets.length ? '<div class="table-scroll"><table class="admin"><thead><tr><th>ID</th><th>Profil</th><th>Statut</th><th>MàJ</th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="lede">' + (REMOTE ? 'Aucun dossier pour l\'instant.' : 'Aucun dossier enregistré dans ce navigateur pour l\'instant.') + '</p>') +
+      (state.admin.actionError ? '<div class="msg error" role="alert">' + escapeHtml(state.admin.actionError) + '</div>' : '') +
+      (a.cap ? '<p class="hint" style="margin-top:14px;">Plafond interne indicatif pour les demandes exceptionnelles : ' + escapeHtml(a.cap) + ' € HT / moto (information interne, non communiquée au client).</p>' : '') +
+      '<div class="nav-row"><button class="btn btn-ghost" data-action="go-home">← Accueil</button><button class="btn btn-ghost" data-action="admin-logout">Se déconnecter</button></div></div>';
+  }
+
+  function renderAdminDetail(id){
+    var t = Store.adminTicket(id);
+    if (!t && REMOTE) return '<div class="card"><button class="btn-text" data-action="admin-back">← Retour à la liste</button><h2 class="mono">' + escapeHtml(id) + '</h2>' +
+      (state.admin.actionError ? '<div class="msg error" role="alert">' + escapeHtml(state.admin.actionError) + '</div>' : '<p class="lede">Chargement du dossier…</p>') + '</div>';
+    if (!t) { state.admin.selected = null; return renderAdmin(); }
+    var out = '<div class="card"><button class="btn-text" data-action="admin-back">← Retour à la liste</button>' +
+      '<h2 class="mono">' + escapeHtml(t.id) + '</h2>' + statusBadge(t.status);
+    out += '<dl class="recap">';
+    out += '<dt>Profil</dt><dd>' + escapeHtml(t.profile) + (t.proSituation ? (' — ' + escapeHtml(t.proSituation)) : '') + '</dd>';
+    if (t.profile === 'particulier' && t.coords) {
+      out += '<dt>VIN</dt><dd>' + escapeHtml(t.vin) + ' (container ' + t.container + ')</dd>';
+      out += '<dt>Immatriculation</dt><dd>' + escapeHtml(t.regDate) + ' — ' + t.diffDays + ' j</dd>';
+      out += '<dt>Nom</dt><dd>' + escapeHtml(t.coords.prenom) + ' ' + escapeHtml(t.coords.nom) + '</dd>';
+      out += '<dt>Contact</dt><dd>' + escapeHtml(t.coords.email) + ' — ' + escapeHtml(t.coords.telephone) + '</dd>';
+      out += '<dt>Facturation</dt><dd>' + escapeHtml(t.coords.adresseFacturation) + '</dd>';
+      out += '<dt>Livraison</dt><dd>' + escapeHtml(t.coords.adresseLivraison) + '</dd>';
+      if (t.compensation) out += '<dt>Compensation</dt><dd>' + escapeHtml(t.compensation.label) + '</dd>';
+    } else if (t.profile === 'pro' && t.motos) {
+      out += '<dt>Société</dt><dd>' + escapeHtml(t.proCoords.raisonSociale) + '</dd>';
+      out += '<dt>Contact</dt><dd>' + escapeHtml(t.proCoords.email) + ' — ' + escapeHtml(t.proCoords.telephone) + '</dd>';
+      out += '<dt>Motos</dt><dd>' + t.motos.map(function(m){ return escapeHtml(m.vin) + ' — achat ' + escapeHtml(m.achatDate) + ' (' + fmtEUR(proAvoirForRemise(m.remise)) + ')'; }).join(', ') + '</dd>';
+      out += '<dt>Total avoir</dt><dd>' + fmtEUR(t.totalAvoir) + '</dd>';
+    }
+    if (t.exceptionRequest) {
+      out += '<dt>Motif</dt><dd>' + escapeHtml(t.exceptionRequest.reasonLabel) + '</dd>';
+      if (t.exceptionRequest.vin) out += '<dt>VIN saisi</dt><dd>' + escapeHtml(t.exceptionRequest.vin) + (t.exceptionRequest.container ? ' (container ' + t.exceptionRequest.container + ')' : '') + '</dd>';
+      if (t.exceptionRequest.regDate) out += '<dt>Immatriculation</dt><dd>' + escapeHtml(t.exceptionRequest.regDate) + (t.exceptionRequest.diffDays != null ? ' — ' + t.exceptionRequest.diffDays + ' j' : '') + '</dd>';
+      if (t.exceptionRequest.country) out += '<dt>Pays</dt><dd>' + (t.exceptionRequest.country === 'fr' ? 'France métropolitaine' : 'Étranger') + '</dd>';
+      out += '<dt>Nom</dt><dd>' + escapeHtml(t.exceptionRequest.nom) + '</dd>';
+      out += '<dt>Message client</dt><dd style="font-family:\'Work Sans\'">' + escapeHtml(t.exceptionRequest.message) + '</dd>';
+      out += '<dt>Contact</dt><dd>' + escapeHtml(t.exceptionRequest.email) + ' — ' + escapeHtml(t.exceptionRequest.telephone) + '</dd>';
+    }
+    out += '</dl>';
+
+    if (t.docs) {
+      out += '<h3 style="margin-top:18px;">Pièces jointes</h3>';
+      ['carteGrise','facture'].forEach(function(k){
+        var d = t.docs[k];
+        var label = k === 'carteGrise' ? 'Carte grise' : 'Facture d\'achat';
+        if (!d) { out += '<p class="hint">' + label + ' : non fournie</p>'; return; }
+        out += '<p class="hint">' + label + ' — ' + escapeHtml(d.name) + ' (' + Math.round(d.size/1024) + ' Ko)</p>';
+        // Lien signé temporaire vers l'espace privé Supabase, ou fichier intégré en mode démonstration.
+        var src = REMOTE && d.url && d.url.indexOf(SUPABASE_URL + '/storage/v1/') === 0 ? d.url
+                : (/^data:(image\/[\w.+-]+|application\/pdf);base64,/.test(d.dataUrl || '') ? d.dataUrl : null);
+        if (!src) { out += '<p class="hint">Format de fichier non affichable.</p>'; return; }
+        if ((d.type||'').indexOf('image') === 0) out += '<img src="' + escapeHtml(src) + '" alt="' + label + '" style="max-width:260px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px;">';
+        else out += '<iframe src="' + escapeHtml(src) + '" title="' + label + '" style="width:100%;height:280px;border:1px solid var(--line);border-radius:8px;margin-bottom:10px;"></iframe>';
+        if (REMOTE) out += '<p class="hint"><a href="' + escapeHtml(src) + '" target="_blank" rel="noopener">Ouvrir le fichier en grand</a></p>';
+      });
+    }
+
+    out += '<h3 style="margin-top:18px;">Actions internes</h3>';
+    if (t.status === 'valide_cloture' || t.status === 'rejete') {
+      out += '<p class="hint">Dossier clôturé' + (t.totalAvoir ? ' — avoir accordé : ' + fmtEUR(t.totalAvoir) : '') + '. Aucune action possible.</p></div>';
+      return out;
+    }
+    if (state.admin.actionError) out += '<div class="msg error" role="alert">' + escapeHtml(state.admin.actionError) + '</div>';
+    out += '<label class="checkbox-row"><input type="checkbox" data-field-checkbox="admin.fraudCheck" ' + (state.admin.fraudCheck?'checked':'') + '>Nom / adresse concordants entre facture, carte grise et livraison</label>';
+    out += '<div class="cta-row" style="margin-top:12px;">';
+    out += '<button class="btn btn-ghost btn-sm" data-action="admin-reject-doc" data-id="' + t.id + '">Marquer un document non conforme</button>';
+    out += '<button class="btn btn-primary btn-sm" data-action="admin-validate" data-id="' + t.id + '" ' + (state.admin.fraudCheck ? '' : 'disabled') + '>Valider &amp; clôturer</button>';
+    if (t.status === 'exception_manuelle') out += '<button class="btn btn-ghost btn-sm" data-action="admin-grant-exception" data-id="' + t.id + '">Accorder un geste au cas par cas</button>';
+    out += '<button class="btn btn-danger btn-sm" data-action="admin-close-nosuite" data-id="' + t.id + '">Clôturer sans suite</button>';
+    out += '</div>';
+
+    out += '</div>';
+    return out;
+  }
+
+  /* ================= HISTORIQUE DU NAVIGATEUR ================= */
+  // Chaque écran ajoute une entrée à l'historique : les boutons Précédent / Suivant du navigateur
+  // naviguent entre les étapes au lieu de quitter le site. Les saisies sont conservées.
+  var navReady = false, navRestoring = false, navLastKey = '';
+  function navState(){
+    var w = state.wizard, ex = state.exception;
+    return { view: state.view, step: w.step, profile: w.profile, exc: !!ex.open, sent: !!ex.sent,
+             sel: state.view === 'admin' ? state.admin.selected : null, tr: !!state.track.result };
+  }
+  function syncHistory(){
+    var n = navState(), key = JSON.stringify(n);
+    if (key === navLastKey) return;
+    try {
+      if (!navReady || navRestoring) history.replaceState({ nav: n }, '');
+      else history.pushState({ nav: n }, '');
+    } catch(e){}
+    navLastKey = key; navReady = true;
+  }
+  function isSubmitted(w){ return !!(w.ticket && w.ticket.status && w.ticket.status !== 'verification'); }
+  // L'étape s peut-elle être franchie avec les données actuellement saisies ?
+  function stepPassable(w, s){
+    if (w.profile === 'particulier' && s === 2) return !!(w.vinResult && w.ticket && w.vinResult.vin === normalizeVin(w.vin));
+    var saved = w.step; w.step = s; var err = stepError(w); w.step = saved;
+    return !err;
+  }
+  function applyNav(n){
+    var w = state.wizard;
+    if (!n || !n.view) n = { view: 'home' };
+    state.exception.open = state.exception.open && n.view === 'wizard';
+    if (n.view === 'confirmation-particulier' || n.view === 'confirmation-pro') {
+      var okConf = isSubmitted(w) && ((n.view === 'confirmation-pro') === (w.profile === 'pro'));
+      state.view = okConf ? n.view : 'home';
+      return;
+    }
+    if (n.view === 'wizard') {
+      // Un dossier déjà envoyé ne se rouvre pas par l'historique : retour à l'accueil.
+      if (isSubmitted(w) || state.exception.sent) { state.view = 'home'; state.exception = initException(); return; }
+      state.view = 'wizard';
+      w.formError = '';
+      state.exception.open = !!(n.exc && state.exception.reasonLabel);
+      if (!n.profile || !n.step) { w.profile = null; w.step = 0; w.proSituation = null; return; }
+      w.profile = n.profile;
+      var target = n.step, s = 1;
+      while (s < target && stepPassable(w, s)) s++;
+      w.step = s;
+      return;
+    }
+    state.view = n.view;
+    if (n.view === 'home') state.exception = initException();
+    if (n.view === 'track' && !n.tr) state.track.result = null;
+    if (n.view === 'admin') {
+      var sel = state.admin.authed && n.sel && (REMOTE || findTicket(n.sel)) ? n.sel : null;
+      if (sel !== state.admin.selected) { state.admin.selected = sel; state.admin.fraudCheck = false; state.admin.actionError = ''; }
+    }
+  }
+  window.addEventListener('popstate', function(e){
+    navRestoring = true;
+    try { applyNav(e.state && e.state.nav); render(); } finally { navRestoring = false; }
+    if (state.view === 'admin') adminReload();
+  });
+
+  /* ================= EVENTS ================= */
+  function bindEvents(){
+    app.querySelectorAll('[data-field]').forEach(function(el){
+      // Associe chaque champ à son libellé (accessibilité) quand le balisage ne le fait pas.
+      if (!(el.labels && el.labels.length)) {
+        var prev = el.previousElementSibling;
+        if (prev && prev.tagName === 'LABEL' && !prev.htmlFor) {
+          if (!el.id) el.id = 'f-' + el.dataset.field.replace(/\./g, '-');
+          prev.htmlFor = el.id;
+        }
+      }
+      var evt = (el.tagName === 'SELECT' || el.type === 'date' || el.type==='file') ? 'change' : 'input';
+      el.addEventListener(evt, function(){
+        setPath(state, el.dataset.field, el.value);
+        // Pas de re-rendu ici : reconstruire le DOM pendant la saisie ferait perdre
+        // le focus et les caractères tapés dans le champ suivant.
+      });
+      if (el.dataset.field === 'wizard.regDate') {
+        // On ne met à jour que la zone de résultat, jamais le champ lui-même,
+        // pour ne pas voler le focus de l'élément sur lequel l'utilisateur clique.
+        var showBracket = function(){
+          var b = regBracket(el.value), box = document.getElementById('reg-feedback');
+          // Rien ne change : on ne redessine pas, sinon le bouton « Continuer » sur lequel
+          // l'utilisateur est en train de cliquer serait remplacé et le clic perdu.
+          if (JSON.stringify(b) === JSON.stringify(state.wizard.bracket) && box && box.dataset.drawn) return;
+          state.wizard.bracket = b;
+          if (box) { box.innerHTML = regFeedbackHtml(b); box.dataset.drawn = '1'; }
+        };
+        el.addEventListener('change', showBracket);
+        el.addEventListener('blur', showBracket);
+      }
+    });
+    app.querySelectorAll('[data-field-checkbox]').forEach(function(el){
+      el.addEventListener('change', function(){
+        setPath(state, el.dataset.fieldCheckbox, el.checked);
+        render();
+      });
+    });
+    app.querySelectorAll('[data-upload]').forEach(function(el){
+      el.addEventListener('change', function(){
+        var file = el.files[0]; if (!file) return;
+        readFileAsDataUrl(file, MAX_UPLOAD).then(function(res){
+          state.wizard.docs[el.dataset.upload] = res;
+          state.wizard.fileError = '';
+          render();
+        }).catch(function(err){
+          state.wizard.fileError = fileErrorMsg(err.code);
+          render();
+        });
+      });
+    });
+    app.querySelectorAll('[data-reupload]').forEach(function(el){
+      el.addEventListener('change', function(){
+        var file = el.files[0]; if (!file) return;
+        readFileAsDataUrl(file, MAX_UPLOAD).then(function(res){
+          state.track.reupload[el.dataset.reupload] = res;
+          state.track.reuploadError = '';
+          render();
+        }).catch(function(err){
+          state.track.reuploadError = fileErrorMsg(err.code);
+          render();
+        });
+      });
+    });
+    app.querySelectorAll('[data-action]').forEach(function(el){
+      if (el.tagName === 'BUTTON') return;
+      el.tabIndex = 0;
+      if (el.tagName !== 'TR') el.setAttribute('role', 'button');
+    });
+    app.addEventListener('click', onClick);
+    app.addEventListener('keydown', onKeydown);
+  }
+
+  // Entrée / Espace activent les éléments cliquables qui ne sont pas des <button> ;
+  // Entrée dans un champ déclenche l'action principale de l'étape (ou la vérification de la ligne moto).
+  function onKeydown(e){
+    var el = e.target;
+    if (el.matches('[data-action]:not(button)') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); el.click(); return; }
+    if (e.key !== 'Enter' || el.tagName !== 'INPUT' || /^(checkbox|radio|file|button|submit)$/.test(el.type)) return;
+    var line = el.closest('.moto-line');
+    var target = line ? line.querySelector('[data-action="check-moto-line"]') : (el.closest('.card') || app).querySelector('.btn-primary:not([disabled])');
+    if (!target) return;
+    e.preventDefault();
+    el.blur(); // enregistre la saisie (ex. date d'immatriculation) avant l'action
+    if (target.isConnected) target.click();
+    else { var again = (app.querySelector('.card') || app).querySelector('.btn-primary:not([disabled])'); if (again) again.click(); }
+  }
+
+  function initTrack(){ return { ticketId:'', contact:'', result:null, error:'', reupload:{}, reuploadError:'' }; }
+
+  // Retourne un message d'erreur si l'étape courante ne permet pas d'avancer, sinon ''.
+  function stepError(w){
+    if (w.profile === 'particulier') {
+      if (w.step === 1) return (w.bracket && (w.bracket.bracket === 'lt60' || w.bracket.bracket === '60to90')) ? '' : 'Date d\'immatriculation non éligible.';
+      if (w.step === 2) return 'Merci de vérifier votre numéro de série.';
+      if (w.step === 3) return w.country === 'fr' ? '' : 'Opération réservée à la France métropolitaine.';
+      if (w.step === 4) { var miss = validateParticulierDocs(w); return miss.length ? missingMsg(miss) : ''; }
+      return 'Étape inconnue.';
+    }
+    if (w.profile === 'pro') {
+      if (w.step === 1) return w.proSituation === 'stock' ? '' : 'Choisissez la situation de vos motos.';
+      if (w.step === 2) return allMotosOk(w) ? '' : 'Toutes les motos doivent être vérifiées comme éligibles, sans doublon, avec date d\'achat et numéro de facture TRC.';
+      if (w.step === 3) { var missP = validateProCoords(w.proCoords); return missP.length ? missingMsg(missP) : ''; }
+      return 'Étape inconnue.';
+    }
+    return 'Choisissez votre profil.';
+  }
+
+  function contactMatches(tk, raw){
+    var c = String(raw || '').trim();
+    if (!c) return false;
+    var email = c.toLowerCase(), phone = normalizePhone(c);
+    return [tk.coords, tk.proCoords, tk.exceptionRequest].some(function(src){
+      if (!src) return false;
+      if (src.email && String(src.email).trim().toLowerCase() === email) return true;
+      return phone.length >= 9 && src.telephone && normalizePhone(src.telephone) === phone;
+    });
+  }
+
+  function isClosed(t){ return t.status === 'valide_cloture' || t.status === 'rejete'; }
+
+  // Une seule opération serveur à la fois : un double-clic ne crée pas deux dossiers.
+  var pending = false;
+  function busy(promise){
+    pending = true;
+    document.body.setAttribute('aria-busy', 'true');
+    return Promise.resolve(promise).then(function(){}, function(){}).then(function(){ pending = false; document.body.removeAttribute('aria-busy'); });
+  }
+  // Session admin expirée ou retirée : retour à l'écran de connexion.
+  function adminError(e){
+    if (e && e.code === 'auth') { Store.adminLogout(); state.admin = initAdmin(); state.admin.passError = 'Votre session a expiré. Merci de vous reconnecter.'; }
+    else state.admin.actionError = serverErrorMsg(e);
+  }
+  // Recharge depuis le serveur la liste ou la fiche affichée (sans effet en mode démonstration).
+  function adminReload(){
+    if (!REMOTE || !state.admin.authed) return;
+    var sel = state.admin.selected;
+    Store.adminRefresh(sel).catch(adminError).then(function(){ if (state.view === 'admin' && state.admin.selected === sel) render(); });
+  }
+
+  function onClick(e){
+    var el = e.target.closest('[data-action]');
+    if (!el) return;
+    var action = el.dataset.action;
+    var w = state.wizard;
+    if (pending && /^(check-vin-particulier|send-exception|submit-particulier|submit-pro|track-lookup|track-resubmit|admin-login|admin-validate|admin-reject-doc|admin-grant-exception|admin-close-nosuite)$/.test(action)) return;
+
+    if (action === 'start-wizard') { state.view = 'wizard'; state.wizard = initWizard(); state.exception = initException(); render(); }
+    else if (action === 'go-home') { state.view = 'home'; state.exception = initException(); render(); }
+    else if (action === 'go-track') { state.view = 'track'; state.track = initTrack(); render(); }
+    else if (action === 'go-admin') { state.view = 'admin'; render(); adminReload(); }
+    else if (action === 'go-privacy') { if (state.view !== 'privacy') state.privacyFrom = state.view; state.view = 'privacy'; window.scrollTo(0, 0); render(); }
+    else if (action === 'privacy-back') { state.view = state.privacyFrom || 'home'; render(); }
+    else if (action === 'admin-logout') { Store.adminLogout(); state.admin = initAdmin(); state.view='home'; render(); }
+
+    else if (action === 'pick-profile') { w.profile = el.dataset.value; w.step = 1; w.formError = ''; render(); }
+    else if (action === 'wizard-back') {
+      if (w.step === 0 || (w.step === 1 && w.profile)) { w.profile = null; w.step = 0; w.proSituation = null; }
+      else w.step -= 1;
+      w.formError = '';
+      render();
+    }
+    else if (action === 'wizard-next') {
+      var err = stepError(w);
+      if (err) { w.formError = err; render(); return; }
+      w.formError = '';
+      w.step += 1;
+      render();
+    }
+
+    else if (action === 'check-vin-particulier') {
+      busy(Store.reserveVin(w.vin, w.ticket, w.token).then(function(res){
+        if (!res.ok) {
+          w.errorException = null;
+          if (res.reason === 'empty') w.error = 'Merci de saisir un numéro de série.';
+          else if (res.reason === 'not_found') { w.error = 'Ce numéro de série ne figure pas dans la liste des motos concernées par cette opération.'; w.errorException = 'vin_non_reconnu'; }
+          else if (res.reason === 'container_too_old') { w.error = 'Votre moto provient d\'un lot de production antérieur au container 25, non inclus dans cette opération (container ' + res.container + ').'; w.errorException = 'container_trop_ancien'; }
+          else if (res.reason === 'locked') w.error = 'Un dossier est déjà en cours pour ce numéro de série' + (res.ts ? ' (ouvert le ' + fmtDate(res.ts) + ')' : '') + '. Merci de patienter ou de nous contacter si vous pensez qu\'il s\'agit d\'une erreur.';
+          else { w.ticket = null; w.token = null; w.error = 'Votre dossier a expiré. Merci de vérifier à nouveau votre numéro de série.'; }
+          if (res.reason !== 'locked') w.vinResult = null;
+          render();
+          return;
+        }
+        w.vinResult = { ok:true, vin: res.vin, container: res.container };
+        w.vin = res.vin;
+        w.error = '';
+        w.ticket = res.ticket;
+        if (res.token) w.token = res.token;
+        w.step = 3;
+        render();
+      }).catch(function(e){ w.errorException = null; w.error = serverErrorMsg(e); render(); }));
+    }
+    else if (action === 'pick-country') { w.country = el.dataset.value; w.formError = ''; render(); }
+    else if (action === 'open-exception') {
+      var ctxVin = normalizeVin(w.vin);
+      state.exception = initException();
+      state.exception.open = true;
+      state.exception.reasonLabel = el.dataset.value;
+      state.exception.context = {
+        vin: ctxVin || '', container: ctxVin ? (VIN_DB[ctxVin] || null) : null,
+        regDate: w.regDate || '', diffDays: w.bracket ? w.bracket.diffDays : null, country: w.country || ''
+      };
+      render();
+    }
+    else if (action === 'close-exception') { state.exception.open = false; render(); }
+    else if (action === 'send-exception') {
+      var ex = state.exception;
+      var missE = validateException(ex);
+      if (missE.length) { ex.error = missingMsg(missE); render(); return; }
+      busy(Store.submitException(ex, w).then(function(r){
+        if (!r || !r.ok) {
+          ex.error = r && r.reason === 'storage' ? 'Impossible d\'enregistrer la demande (espace de stockage du navigateur plein).' : 'Demande incomplète : vérifiez les champs ci-dessus.';
+          render(); return;
+        }
+        w.ticket = null; w.token = null;
+        ex.ticketId = r.id; ex.error = ''; ex.sent = true; render();
+      }).catch(function(e){ ex.error = serverErrorMsg(e); render(); }));
+    }
+
+    else if (action === 'pick-pro-situation') { w.proSituation = el.dataset.value; w.formError = ''; render(); }
+    else if (action === 'add-moto-line') { w.motos.push({ vin:'', achatDate:'', remise:'', factureTRC:'', check:null }); render(); }
+    else if (action === 'remove-moto-line') { w.motos.splice(parseInt(el.dataset.index,10),1); render(); }
+    else if (action === 'check-moto-line') {
+      var i = parseInt(el.dataset.index,10);
+      var m = w.motos[i];
+      Store.checkVin(m.vin, 'concession').then(function(r){
+        if (r.ok) {
+          var dup = w.motos.some(function(o, j){ return o !== m && normalizeVin(o.vin) === r.vin; });
+          if (dup) m.check = { ok:false, reason:'duplicate', vin: r.vin };
+          else if (r.locked) m.check = { ok:false, reason:'locked', vin: r.vin };
+          else if (m.achatDate && m.achatDate > todayISO()) m.check = { ok:false, reason:'date_future', vin: r.vin };
+          else m.check = { ok:true, vin: r.vin, container: r.container };
+        } else m.check = r;
+        w.formError = '';
+        render();
+      }).catch(function(e){ w.formError = serverErrorMsg(e); render(); });
+    }
+    else if (action === 'submit-particulier') {
+      var errP = validateParticulierDocs(w);
+      if (!w.vinResult || !w.ticket || errP.length || w.country !== 'fr') { w.step = 4; w.formError = errP.length ? missingMsg(errP) : 'Dossier incomplet.'; render(); return; }
+      busy(Store.submitParticulier(w).then(function(r){
+        if (r.ok) { w.ticket = r.ticket; state.view = 'confirmation-particulier'; render(); return; }
+        if (r.reason === 'locked') { w.step = 2; w.error = 'Un autre dossier a été ouvert pour ce numéro de série entre-temps. Merci de nous contacter.'; w.errorException = null; }
+        else if (r.reason === 'ticket_invalid') { w.ticket = null; w.token = null; w.vinResult = null; w.step = 2; w.errorException = null; w.error = 'Votre dossier a expiré. Merci de vérifier à nouveau votre numéro de série.'; }
+        else if (r.reason === 'reg_date') { w.step = 1; w.formError = 'Date d\'immatriculation non éligible.'; }
+        else if (r.reason === 'storage') { w.step = 4; w.formError = 'Impossible d\'enregistrer le dossier : l\'espace de stockage du navigateur est plein. Merci de compresser vos pièces jointes.'; }
+        else { w.step = 4; w.formError = r.reason === 'docs' ? 'Les pièces jointes n\'ont pas pu être enregistrées. Merci de les joindre à nouveau.' : 'Dossier incomplet.'; }
+        render();
+      }).catch(function(e){
+        w.step = 4;
+        w.formError = e && e.code === 'server' && /mime|size|large|payload/i.test(e.message) ? 'Une pièce jointe a été refusée (format ou taille). Merci de joindre une photo ou un PDF de moins de 8 Mo.' : serverErrorMsg(e);
+        render();
+      }));
+    }
+    else if (action === 'submit-pro') {
+      if (!allMotosOk(w)) { w.step = 2; render(); return; }
+      var missPro = validateProCoords(w.proCoords);
+      if (missPro.length) { w.step = 3; w.formError = missingMsg(missPro); render(); return; }
+      busy(Store.submitPro(w).then(function(r){
+        if (r.ok) { w.ticket = r.ticket; state.view = 'confirmation-pro'; render(); return; }
+        if (r.reason === 'locked') {
+          var taken = r.taken || [];
+          w.motos.forEach(function(m){ if (taken.indexOf(m.check.vin) >= 0) m.check = { ok:false, reason:'locked', vin: m.check.vin }; });
+          w.step = 2;
+          w.formError = taken.length ? 'Un dossier a été ouvert entre-temps pour ' + taken.length + ' de ces motos. Retirez-les pour continuer.' : 'Un dossier a été ouvert entre-temps pour une de ces motos. Vérifiez à nouveau chaque numéro de série.';
+        }
+        else if (r.reason === 'storage') w.formError = 'Impossible d\'enregistrer le dossier (espace de stockage du navigateur plein).';
+        else if (r.reason === 'incomplete') { w.step = 3; w.formError = 'Coordonnées incomplètes : vérifiez la raison sociale, le SIRET, le téléphone et l\'email.'; }
+        else { w.step = 2; w.formError = 'Une des motos n\'est pas éligible' + (r.vin ? ' (' + r.vin + ')' : '') + ' : vérifiez à nouveau chaque ligne.'; }
+        render();
+      }).catch(function(e){ w.formError = serverErrorMsg(e); render(); }));
+    }
+
+    else if (action === 'track-lookup') {
+      var tr0 = state.track;
+      if (!tr0.contact.trim()) { tr0.error = 'Merci d\'indiquer l\'email ou le téléphone utilisé lors de la demande.'; tr0.result = null; render(); return; }
+      busy(Store.track(tr0.ticketId, tr0.contact).then(function(tk){
+        // Même message dans les deux cas : on ne révèle pas si un numéro de dossier existe.
+        if (!tk) { tr0.error = 'Aucun dossier ne correspond à ce numéro et à ce contact.'; tr0.result = null; render(); return; }
+        tr0.error = ''; tr0.result = tk; render();
+      }).catch(function(e){ tr0.error = serverErrorMsg(e); tr0.result = null; render(); }));
+    }
+    else if (action === 'track-reset') { state.track = initTrack(); render(); }
+    else if (action === 'track-resubmit') {
+      var up = state.track.reupload;
+      if (!up.carteGrise && !up.facture) { state.track.reuploadError = 'Merci de joindre au moins un nouveau document avant de renvoyer.'; render(); return; }
+      var tr1 = state.track;
+      busy(Store.resubmit(tr1.result, tr1.contact, up).then(function(r){
+        if (r.reason === 'status') { tr1.result = r.ticket; render(); return; }
+        if (!r.ok) { tr1.reuploadError = r.reason === 'storage' ? 'Impossible d\'enregistrer les documents (espace de stockage plein).' : 'Les documents n\'ont pas pu être enregistrés. Merci de réessayer.'; render(); return; }
+        tr1.result = r.ticket;
+        tr1.reupload = {}; tr1.reuploadError = '';
+        render();
+      }).catch(function(e){ tr1.reuploadError = serverErrorMsg(e); render(); }));
+    }
+
+    else if (action === 'admin-login') {
+      var a0 = state.admin;
+      busy(Store.adminLogin(a0).then(function(r){
+        if (r.ok) { a0.authed = true; a0.passError = ''; a0.passInput = ''; a0.cap = r.cap; return Store.adminRefresh(null); }
+        a0.passError = r.error;
+      }).catch(function(e){ a0.passError = serverErrorMsg(e); }).then(render));
+    }
+    else if (action === 'admin-open' || el.closest('tr[data-action="admin-open"]')) {
+      var trEl = el.closest('tr[data-action="admin-open"]');
+      if (trEl) {
+        state.admin.selected = trEl.dataset.id; state.admin.fraudCheck = false; state.admin.actionError = '';
+        render();
+        adminReload();
+      }
+    }
+    else if (action === 'admin-back') { state.admin.selected = null; state.admin.actionError = ''; render(); adminReload(); }
+    else if (/^admin-(validate|reject-doc|grant-exception|close-nosuite)$/.test(action)) {
+      if (!state.admin.authed) return;
+      var id5 = el.dataset.id, t = Store.adminTicket(id5), opts = {}, cap = state.admin.cap;
+      if (!t || isClosed(t)) { render(); return; }
+      state.admin.actionError = '';
+      if (action === 'admin-validate') {
+        if (!state.admin.fraudCheck) { state.admin.actionError = 'Cochez le contrôle de concordance avant de valider.'; render(); return; }
+      }
+      else if (action === 'admin-reject-doc') {
+        var reason = prompt('Motif du rejet (ex: photo illisible, document incomplet) :');
+        if (reason === null) return;
+        if (!reason.trim()) { state.admin.actionError = 'Un motif de rejet est obligatoire.'; render(); return; }
+        opts.reason = reason.trim();
+      }
+      else if (action === 'admin-grant-exception') {
+        if (t.status !== 'exception_manuelle') return;
+        var montant = prompt('Montant de l\'avoir accordé (€' + (cap ? ', plafond interne indicatif ' + cap + ' € HT' : '') + ') :');
+        if (montant === null) return;
+        var val = parseFloat(String(montant).replace(',', '.').replace(/[^\d.\-]/g, ''));
+        if (isNaN(val) || val <= 0) { state.admin.actionError = 'Montant invalide : saisissez un nombre positif.'; render(); return; }
+        if (cap && val > cap && !confirm('Ce montant dépasse le plafond interne indicatif de ' + cap + ' € HT. Confirmer ?')) return;
+        opts.amount = Math.round(val * 100) / 100;
+      }
+      var apiAction = { 'admin-validate':'validate', 'admin-reject-doc':'reject_doc', 'admin-grant-exception':'grant_exception', 'admin-close-nosuite':'close_nosuite' }[action];
+      busy(Store.adminAction(id5, apiAction, opts).then(function(r){
+        if (r && !r.ok && r.reason === 'stale') state.admin.actionError = 'Ce dossier a été modifié entre-temps (par exemple, nouveaux documents du client). Vérifiez la fiche mise à jour avant d\'agir.';
+      }).catch(adminError).then(render));
+    }
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
