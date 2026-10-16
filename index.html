@@ -623,6 +623,10 @@
       return rpc('admin_get', { p_id: id }, true).then(function(t){
         if (!t || !t.docs) return t;
         return Promise.all([sign(t.docs.carteGrise), sign(t.docs.facture)]).then(function(d){ t.docs = { carteGrise: d[0], facture: d[1] }; return t; });
+      }).then(function(t){
+        if (!t) return t;
+        // Emails envoyés au client : affichage seulement, une erreur ici ne bloque pas la fiche.
+        return rpc('admin_emails', { p_id: id }, true).then(function(e){ t.emails = e || []; return t; }, function(){ return t; });
       }).then(function(t){ detail = t; return t; });
     }
     return {
@@ -1397,6 +1401,7 @@
       });
     }
 
+    if (t.emails) out += adminEmailsHtml(t.emails);
     out += '<h3 style="margin-top:18px;">Actions internes</h3>';
     if (t.status === 'valide_cloture' || t.status === 'rejete') {
       out += '<p class="hint">Dossier clôturé' + (t.totalAvoir ? ' — avoir accordé : ' + fmtEUR(t.totalAvoir) : '') + '. Aucune action possible.</p>';
@@ -1625,6 +1630,18 @@
     if (!REMOTE || !state.admin.authed) return;
     var sel = state.admin.selected;
     Store.adminRefresh(sel).catch(adminError).then(function(){ if (state.view === 'admin' && state.admin.selected === sel) render(); });
+  }
+
+  var EMAIL_KIND = { recu:'Dossier reçu', exception:'Demande reçue', pieces_recues:'Nouveaux documents reçus', documents_rejetes:'Document à renvoyer', valide:'Dossier validé', rejete:'Dossier clôturé' };
+  var EMAIL_STATUS = { attente:'en attente', transmis:'en cours d\'envoi', envoye:'envoyé', echec:'échec' };
+  function adminEmailsHtml(list){
+    var out = '<h3 style="margin-top:18px;">Emails au client</h3>';
+    if (!list.length) return out + '<p class="hint">Aucun email pour ce dossier.</p>';
+    return out + '<ul class="hint" style="padding-left:18px;">' + list.map(function(m){
+      var when = new Date(m.sentAt || m.createdAt).toLocaleString('fr-FR', { dateStyle:'short', timeStyle:'short' });
+      return '<li>' + escapeHtml(EMAIL_KIND[m.kind] || m.kind) + ' → ' + escapeHtml(m.to) + ' : <b>' + escapeHtml(EMAIL_STATUS[m.status] || m.status) + '</b> (' + when + ')' +
+        (m.status !== 'envoye' && m.error ? ' — ' + escapeHtml(m.error) : '') + '</li>';
+    }).join('') + '</ul>';
   }
 
   // Les éléments cliquables qui ne sont pas des <button> deviennent atteignables au clavier.
