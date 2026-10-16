@@ -500,8 +500,7 @@
           vin: w.vinResult.vin, container: w.vinResult.container, country: w.country,
           regDate: w.regDate, diffDays: w.bracket.diffDays, bracket: w.bracket.bracket,
           docs: w.docs, coords: w.coords, cgu: w.cgu,
-          compChoice: w.compChoice,
-          compensation: { choice: w.compChoice, label: compensationLabel(w.bracket.bracket, w.compChoice) }
+          compensation: { label: compensationLabel(w.bracket.bracket) }
         };
         if (!upsertTicket(ticket)) return P({ ok:false, reason:'storage' });
         lockVin(ticket.vin, ticket.id);   // le verrou a pu expirer pendant la saisie
@@ -643,7 +642,7 @@
       submitParticulier: function(w){
         return uploadAll(w.ticket.id, w.token, w.docs).then(function(docs){
           return rpc('submit_particulier', { p_ticket_id: w.ticket.id, p_token: w.token, p_data: {
-            country: w.country, regDate: w.regDate, compChoice: w.compChoice, coords: w.coords, cgu: w.cgu, docs: docs } });
+            country: w.country, regDate: w.regDate, coords: w.coords, cgu: w.cgu, docs: docs } });
         });
       },
       submitPro: function(w){
@@ -754,7 +753,6 @@
       vin: '', vinResult: null, ticket: null, token: null,   // token : secret du dossier côté serveur
       country: null,
       regDate: '', bracket: null,
-      compChoice: null,        // 'pack' | 'avoir'
       docs: { carteGrise: null, facture: null },
       coords: { nom:'', prenom:'', adresseFacturation:'', adresseLivraison:'', telephone:'', email:'' },
       cgu: false,
@@ -802,10 +800,9 @@
     if (r > 100) r = 100;
     return Math.max(0, Math.round(700 * (1 - r/100) * 100) / 100);
   }
-  // Compensation particulier : le client choisit le pack de bagagerie ou l'avoir de remplacement.
-  function compensationLabel(bracket, choice){
-    if (bracket === 'lt60') return choice === 'avoir' ? 'Avoir de 550 €' : 'Pack Westwind RW 80 + avoir 150 €';
-    return choice === 'avoir' ? 'Avoir de 175 €' : 'Pack Westwind RW 80';
+  // Compensation particulier (l'avoir de 550 € / 175 € ne remplace le pack qu'en cas de rupture de stock).
+  function compensationLabel(bracket){
+    return bracket === 'lt60' ? 'Pack Westwind RW 80 + avoir 150 €' : 'Pack Westwind RW 80';
   }
 
   /* ---------- validation ---------- */
@@ -1006,14 +1003,9 @@
       if (b.bracket === 'invalid') {
         out += '<div class="msg error" role="alert">Cette date est postérieure à aujourd\'hui, merci de la corriger.</div>';
       } else if (b.bracket === 'lt60') {
-        out +='<div class="msg ok">Carte grise de moins de 60 jours (' + b.diffDays + ' jours). Vous êtes éligible à : le pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte) + un <b>avoir de 150 €</b> sur kove-racing.com. Déjà équipé en valises ? Vous pouvez choisir à la place un <b>avoir de 550 €</b>. En cas de rupture de stock de la bagagerie, l\'avoir de 550 € vous sera proposé en remplacement.</div>';
-        out += compChoiceHtml(b.bracket);
+        out +='<div class="msg ok">Carte grise de moins de 60 jours (' + b.diffDays + ' jours). Vous êtes éligible à : le pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte) + un <b>avoir de 150 €</b> sur kove-racing.com. En cas de rupture de stock de la bagagerie, un avoir de 550 € vous sera proposé en remplacement.</div>';
       } else if (b.bracket === '60to90') {
-        out +='<div class="msg ok">Carte grise de 60 à 90 jours (' + b.diffDays + ' jours). Vous êtes éligible au pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte). Déjà équipé en valises ? Vous pouvez choisir à la place un <b>avoir de 175 €</b>. En cas de rupture de stock, l\'avoir de 175 € vous sera proposé en remplacement.</div>';
-        out += compChoiceHtml(b.bracket);
-      }
-      if ((b.bracket === 'lt60' || b.bracket === '60to90') && state.wizard.formError) {
-        out += '<div class="msg error" role="alert">' + escapeHtml(state.wizard.formError) + '</div>';
+        out +='<div class="msg ok">Carte grise de 60 à 90 jours (' + b.diffDays + ' jours). Vous êtes éligible au pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte). En cas de rupture de stock, un avoir de 175 € vous sera proposé en remplacement.</div>';
       } else if (b.bracket === 'gt90') {
         out += '<div class="msg error" role="alert">Votre carte grise date de plus de 90 jours (' + b.diffDays + ' jours). Cette opération cible les immatriculations récentes. Vous pouvez toutefois déposer une demande exceptionnelle, étudiée au cas par cas.<br><br><button class="btn btn-ghost btn-sm" data-action="open-exception" data-value="hors_delai">Faire une demande exceptionnelle</button></div>';
       }
@@ -1022,15 +1014,6 @@
       ((b && (b.bracket==='lt60'||b.bracket==='60to90')) ? '<button class="btn btn-primary" data-action="wizard-next">Continuer →</button>' : '') +
       '</div>';
     return out;
-  }
-
-  function compChoiceHtml(bracket){
-    var c = state.wizard.compChoice, avoir = bracket === 'lt60' ? '550 €' : '175 €';
-    return '<p class="lede" style="margin-top:14px;">Choisissez votre compensation :</p>' +
-      '<div class="choice-row">' +
-        '<div class="choice' + (c==='pack'?' selected':'') + '" data-action="pick-comp" data-value="pack"><div class="t">' + escapeHtml(compensationLabel(bracket, 'pack')) + '</div><div class="d">Bagagerie expédiée gratuitement à l\'adresse de votre choix.</div></div>' +
-        '<div class="choice' + (c==='avoir'?' selected':'') + '" data-action="pick-comp" data-value="avoir"><div class="t">Avoir de ' + avoir + '</div><div class="d">Déjà équipé en valises : bon d\'achat consommable sur kove-racing.com.</div></div>' +
-      '</div>';
   }
 
   function renderParticulier(){
@@ -1101,7 +1084,7 @@
         '<div class="field"><label>Prénom</label><input type="text" style="font-family:inherit" data-field="wizard.coords.prenom" value="' + escapeHtml(c.prenom) + '"></div>' +
       '</div>' +
       '<div class="field"><label>Adresse de facturation</label><input type="text" style="font-family:inherit" data-field="wizard.coords.adresseFacturation" value="' + escapeHtml(c.adresseFacturation) + '"></div>' +
-      '<div class="field"><label>' + (w.compChoice === 'avoir' ? 'Adresse postale actuelle' : 'Adresse de livraison de la bagagerie') + '</label><input type="text" style="font-family:inherit" data-field="wizard.coords.adresseLivraison" value="' + escapeHtml(c.adresseLivraison) + '"></div>' +
+      '<div class="field"><label>' + 'Adresse de livraison de la bagagerie' + '</label><input type="text" style="font-family:inherit" data-field="wizard.coords.adresseLivraison" value="' + escapeHtml(c.adresseLivraison) + '"></div>' +
       '<div class="row2">' +
         '<div class="field"><label>Téléphone</label><input type="tel" style="font-family:inherit" data-field="wizard.coords.telephone" value="' + escapeHtml(c.telephone) + '"></div>' +
         '<div class="field"><label>Email</label><input type="email" style="font-family:inherit" data-field="wizard.coords.email" value="' + escapeHtml(c.email) + '"></div>' +
@@ -1114,7 +1097,7 @@
 
   function renderRecapParticulier(){
     var w = state.wizard, b = w.bracket, c = w.coords;
-    var compLabel = compensationLabel(b.bracket, w.compChoice) + (w.compChoice === 'pack' ? (b.bracket === 'lt60' ? ' (ou avoir de 550 € si rupture de stock)' : ' (ou avoir de 175 € si rupture de stock)') : '');
+    var compLabel = compensationLabel(b.bracket) + (b.bracket === 'lt60' ? ' (ou avoir de 550 € si rupture de stock)' : ' (ou avoir de 175 € si rupture de stock)');
     return '' +
       '<h2>Récapitulatif</h2>' +
       '<dl class="recap">' +
@@ -1639,10 +1622,7 @@
   // Retourne un message d'erreur si l'étape courante ne permet pas d'avancer, sinon ''.
   function stepError(w){
     if (w.profile === 'particulier') {
-      if (w.step === 1) {
-        if (!(w.bracket && (w.bracket.bracket === 'lt60' || w.bracket.bracket === '60to90'))) return 'Date d\'immatriculation non éligible.';
-        return w.compChoice === 'pack' || w.compChoice === 'avoir' ? '' : 'Choisissez votre compensation : pack de bagagerie ou avoir.';
-      }
+      if (w.step === 1) return (w.bracket && (w.bracket.bracket === 'lt60' || w.bracket.bracket === '60to90')) ? '' : 'Date d\'immatriculation non éligible.';
       if (w.step === 2) return 'Merci de vérifier votre numéro de série.';
       if (w.step === 3) return w.country === 'fr' ? '' : 'Opération réservée à la France métropolitaine.';
       if (w.step === 4) { var miss = validateParticulierDocs(w); return miss.length ? missingMsg(miss) : ''; }
@@ -1764,7 +1744,6 @@
         render();
       }).catch(function(e){ w.errorException = null; w.error = serverErrorMsg(e); render(); }));
     }
-    else if (action === 'pick-comp') { w.compChoice = el.dataset.value; w.formError = ''; render(); }
     else if (action === 'pick-country') { w.country = el.dataset.value; w.formError = ''; render(); }
     else if (action === 'open-exception') {
       var ctxVin = normalizeVin(w.vin);
