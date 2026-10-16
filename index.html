@@ -408,7 +408,7 @@
     contactDonnees: 'adrien.trcracing@gmail.com',
     directeurPublication: 'Robin Charbonnier, Président',
     hebergeur: 'GitHub, Inc. (service GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis, téléphone +1 877 448 4820',
-    dureeDossier: '3 ans après la clôture du dossier'
+    dureeDossier: '90 jours après la clôture du dossier'
   };
 
   /* ---------- storage helpers ---------- */
@@ -452,7 +452,7 @@
     var l = getLocks(), now = Date.now(), changed = false;
     for (var vin in l){
       if (!l[vin] || typeof l[vin] !== 'object'){ delete l[vin]; changed = true; continue; }
-      if (l[vin].status === 'verification' && now - l[vin].ts > 48*3600*1000){ delete l[vin]; changed = true; }
+      if (l[vin].status === 'verification' && now - l[vin].ts > 7*24*3600*1000){ delete l[vin]; changed = true; }
     }
     if (changed) saveLocks(l);
     return l;
@@ -500,7 +500,8 @@
           vin: w.vinResult.vin, container: w.vinResult.container, country: w.country,
           regDate: w.regDate, diffDays: w.bracket.diffDays, bracket: w.bracket.bracket,
           docs: w.docs, coords: w.coords, cgu: w.cgu,
-          compensation: { label: w.bracket.bracket === 'lt60' ? 'Pack Westwind RW 80 + avoir 150 €' : 'Pack Westwind RW 80' }
+          compChoice: w.compChoice,
+          compensation: { choice: w.compChoice, label: compensationLabel(w.bracket.bracket, w.compChoice) }
         };
         if (!upsertTicket(ticket)) return P({ ok:false, reason:'storage' });
         lockVin(ticket.vin, ticket.id);   // le verrou a pu expirer pendant la saisie
@@ -557,7 +558,7 @@
       adminAction: function(id, action, opts){
         var t = findTicket(id);
         if (!t || isClosed(t)) return P({ ok:false, reason:'closed' });
-        if (action === 'validate') t.status = 'valide_cloture';
+        if (action === 'validate') { t.status = 'valide_cloture'; if (opts.reason) t.validationNote = opts.reason; }
         else if (action === 'reject_doc') { t.status = 'documents_rejetes'; t.docRejectReason = opts.reason; }
         else if (action === 'grant_exception') { if (t.status !== 'exception_manuelle') return P({ ok:false, reason:'status' }); t.totalAvoir = opts.amount; t.status = 'valide_cloture'; }
         else if (action === 'close_nosuite') t.status = 'rejete';
@@ -638,7 +639,7 @@
       submitParticulier: function(w){
         return uploadAll(w.ticket.id, w.token, w.docs).then(function(docs){
           return rpc('submit_particulier', { p_ticket_id: w.ticket.id, p_token: w.token, p_data: {
-            country: w.country, regDate: w.regDate, coords: w.coords, cgu: w.cgu, docs: docs } });
+            country: w.country, regDate: w.regDate, compChoice: w.compChoice, coords: w.coords, cgu: w.cgu, docs: docs } });
         });
       },
       submitPro: function(w){
@@ -749,6 +750,7 @@
       vin: '', vinResult: null, ticket: null, token: null,   // token : secret du dossier côté serveur
       country: null,
       regDate: '', bracket: null,
+      compChoice: null,        // 'pack' | 'avoir'
       docs: { carteGrise: null, facture: null },
       coords: { nom:'', prenom:'', adresseFacturation:'', adresseLivraison:'', telephone:'', email:'' },
       cgu: false,
@@ -795,6 +797,11 @@
     if (isNaN(r) || r < 0) r = 0;
     if (r > 100) r = 100;
     return Math.max(0, Math.round(700 * (1 - r/100) * 100) / 100);
+  }
+  // Compensation particulier : le client choisit le pack de bagagerie ou l'avoir de remplacement.
+  function compensationLabel(bracket, choice){
+    if (bracket === 'lt60') return choice === 'avoir' ? 'Avoir de 550 €' : 'Pack Westwind RW 80 + avoir 150 €';
+    return choice === 'avoir' ? 'Avoir de 175 €' : 'Pack Westwind RW 80';
   }
 
   /* ---------- validation ---------- */
@@ -995,9 +1002,14 @@
       if (b.bracket === 'invalid') {
         out += '<div class="msg error" role="alert">Cette date est postérieure à aujourd\'hui, merci de la corriger.</div>';
       } else if (b.bracket === 'lt60') {
-        out +='<div class="msg ok">Carte grise de moins de 60 jours (' + b.diffDays + ' jours). Vous êtes éligible à : le pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte) + un <b>avoir de 150 €</b> sur kove-racing.com. En cas de rupture de stock de la bagagerie, un avoir de 550 € vous sera proposé en remplacement.</div>';
+        out +='<div class="msg ok">Carte grise de moins de 60 jours (' + b.diffDays + ' jours). Vous êtes éligible à : le pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte) + un <b>avoir de 150 €</b> sur kove-racing.com. Déjà équipé en valises ? Vous pouvez choisir à la place un <b>avoir de 550 €</b>. En cas de rupture de stock de la bagagerie, l\'avoir de 550 € vous sera proposé en remplacement.</div>';
+        out += compChoiceHtml(b.bracket);
       } else if (b.bracket === '60to90') {
-        out +='<div class="msg ok">Carte grise de 60 à 90 jours (' + b.diffDays + ' jours). Vous êtes éligible au pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte). En cas de rupture de stock, un avoir de 175 € vous sera proposé en remplacement.</div>';
+        out +='<div class="msg ok">Carte grise de 60 à 90 jours (' + b.diffDays + ' jours). Vous êtes éligible au pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte). Déjà équipé en valises ? Vous pouvez choisir à la place un <b>avoir de 175 €</b>. En cas de rupture de stock, l\'avoir de 175 € vous sera proposé en remplacement.</div>';
+        out += compChoiceHtml(b.bracket);
+      }
+      if ((b.bracket === 'lt60' || b.bracket === '60to90') && state.wizard.formError) {
+        out += '<div class="msg error" role="alert">' + escapeHtml(state.wizard.formError) + '</div>';
       } else if (b.bracket === 'gt90') {
         out += '<div class="msg error" role="alert">Votre carte grise date de plus de 90 jours (' + b.diffDays + ' jours). Cette opération cible les immatriculations récentes. Vous pouvez toutefois déposer une demande exceptionnelle, étudiée au cas par cas.<br><br><button class="btn btn-ghost btn-sm" data-action="open-exception" data-value="hors_delai">Faire une demande exceptionnelle</button></div>';
       }
@@ -1006,6 +1018,15 @@
       ((b && (b.bracket==='lt60'||b.bracket==='60to90')) ? '<button class="btn btn-primary" data-action="wizard-next">Continuer →</button>' : '') +
       '</div>';
     return out;
+  }
+
+  function compChoiceHtml(bracket){
+    var c = state.wizard.compChoice, avoir = bracket === 'lt60' ? '550 €' : '175 €';
+    return '<p class="lede" style="margin-top:14px;">Choisissez votre compensation :</p>' +
+      '<div class="choice-row">' +
+        '<div class="choice' + (c==='pack'?' selected':'') + '" data-action="pick-comp" data-value="pack"><div class="t">' + escapeHtml(compensationLabel(bracket, 'pack')) + '</div><div class="d">Bagagerie expédiée gratuitement à l\'adresse de votre choix.</div></div>' +
+        '<div class="choice' + (c==='avoir'?' selected':'') + '" data-action="pick-comp" data-value="avoir"><div class="t">Avoir de ' + avoir + '</div><div class="d">Déjà équipé en valises : bon d\'achat consommable sur kove-racing.com.</div></div>' +
+      '</div>';
   }
 
   function renderParticulier(){
@@ -1076,12 +1097,12 @@
         '<div class="field"><label>Prénom</label><input type="text" style="font-family:inherit" data-field="wizard.coords.prenom" value="' + escapeHtml(c.prenom) + '"></div>' +
       '</div>' +
       '<div class="field"><label>Adresse de facturation</label><input type="text" style="font-family:inherit" data-field="wizard.coords.adresseFacturation" value="' + escapeHtml(c.adresseFacturation) + '"></div>' +
-      '<div class="field"><label>Adresse de livraison de la bagagerie</label><input type="text" style="font-family:inherit" data-field="wizard.coords.adresseLivraison" value="' + escapeHtml(c.adresseLivraison) + '"></div>' +
+      '<div class="field"><label>' + (w.compChoice === 'avoir' ? 'Adresse postale actuelle' : 'Adresse de livraison de la bagagerie') + '</label><input type="text" style="font-family:inherit" data-field="wizard.coords.adresseLivraison" value="' + escapeHtml(c.adresseLivraison) + '"></div>' +
       '<div class="row2">' +
         '<div class="field"><label>Téléphone</label><input type="tel" style="font-family:inherit" data-field="wizard.coords.telephone" value="' + escapeHtml(c.telephone) + '"></div>' +
         '<div class="field"><label>Email</label><input type="email" style="font-family:inherit" data-field="wizard.coords.email" value="' + escapeHtml(c.email) + '"></div>' +
       '</div>' +
-      '<label class="checkbox-row"><input type="checkbox" data-field-checkbox="wizard.cgu" ' + (w.cgu?'checked':'') + '>Je certifie sur l\'honneur l\'exactitude de la date renseignée. Toute fausse déclaration entraînera le rejet définitif du dossier sans possibilité de recours.</label>' +
+      '<label class="checkbox-row"><input type="checkbox" data-field-checkbox="wizard.cgu" ' + (w.cgu?'checked':'') + '>Je certifie sur l\'honneur l\'exactitude de l\'ensemble des informations renseignées, notamment la date d\'immatriculation et l\'achat de la moto en France métropolitaine. Toute fausse déclaration entraînera le rejet définitif du dossier sans possibilité de recours.</label>' +
       privacyNoteHtml() +
       '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
       '<button class="btn btn-primary" data-action="wizard-next">Continuer →</button></div>';
@@ -1089,11 +1110,11 @@
 
   function renderRecapParticulier(){
     var w = state.wizard, b = w.bracket, c = w.coords;
-    var compLabel = b.bracket === 'lt60' ? 'Pack Westwind RW 80 + avoir de 150 € (ou avoir de 550 € si rupture de stock)' : 'Pack Westwind RW 80 (ou avoir de 175 € si rupture de stock)';
+    var compLabel = compensationLabel(b.bracket, w.compChoice) + (w.compChoice === 'pack' ? (b.bracket === 'lt60' ? ' (ou avoir de 550 € si rupture de stock)' : ' (ou avoir de 175 € si rupture de stock)') : '');
     return '' +
       '<h2>Récapitulatif</h2>' +
       '<dl class="recap">' +
-        '<dt>Numéro de série</dt><dd>' + escapeHtml(w.vinResult.vin) + ' (container ' + w.vinResult.container + ')</dd>' +
+        '<dt>Numéro de série</dt><dd>' + escapeHtml(w.vinResult.vin) + '</dd>' +
         '<dt>Immatriculation</dt><dd>' + escapeHtml(w.regDate) + ' — ' + b.diffDays + ' jours</dd>' +
         '<dt>Compensation prévisionnelle</dt><dd>' + compLabel + '</dd>' +
         '<dt>Nom</dt><dd>' + escapeHtml(c.prenom) + ' ' + escapeHtml(c.nom) + '</dd>' +
@@ -1149,13 +1170,13 @@
 
   function renderMotosLines(){
     var w = state.wizard;
-    var out = '<h2>Motos concernées</h2><p class="lede">Ajoutez chaque moto de votre stock invendu concernée par cette opération (container 21 et suivants, nouveaux coloris).</p>';
+    var out = '<h2>Motos concernées</h2><p class="lede">Ajoutez chaque moto de votre stock invendu concernée par cette opération. L\'éligibilité de chaque numéro de série est vérifiée automatiquement.</p>';
     w.motos.forEach(function(m, i){
       var statusHtml = '';
       if (m.check) {
-        if (m.check.ok) statusHtml = '<span class="badge ok">Éligible — container ' + m.check.container + '</span>';
+        if (m.check.ok) statusHtml = '<span class="badge ok">Éligible</span>';
         else if (m.check.reason === 'not_found') statusHtml = '<span class="badge bad">VIN non reconnu</span>';
-        else if (m.check.reason === 'container_too_old') statusHtml = '<span class="badge bad">Container ' + m.check.container + ' — hors périmètre (à partir du 21)</span>';
+        else if (m.check.reason === 'container_too_old') statusHtml = '<span class="badge bad">Hors périmètre : ne fait pas partie des séries concernées</span>';
         else if (m.check.reason === 'locked') statusHtml = '<span class="badge pending">Dossier déjà en cours pour ce VIN</span>';
         else if (m.check.reason === 'duplicate') statusHtml = '<span class="badge bad">VIN déjà saisi sur une autre ligne de ce dossier</span>';
         else if (m.check.reason === 'date_future') statusHtml = '<span class="badge bad">Date d\'achat dans le futur</span>';
@@ -1166,7 +1187,7 @@
         '<div class="grid4">' +
           '<div><label>N° de série (VIN)</label><input type="text" data-field="wizard.motos.' + i + '.vin" value="' + escapeHtml(m.vin) + '"></div>' +
           '<div><label>Date d\'achat</label><input type="date" data-field="wizard.motos.' + i + '.achatDate" value="' + escapeHtml(m.achatDate) + '" max="' + todayISO() + '"></div>' +
-          '<div><label>Remise déjà accordée (%)</label><input type="number" min="0" max="100" data-field="wizard.motos.' + i + '.remise" value="' + escapeHtml(m.remise) + '"></div>' +
+          '<div><label>Remise sur facture (%)</label><input type="number" min="0" max="100" data-field="wizard.motos.' + i + '.remise" value="' + escapeHtml(m.remise) + '"></div>' +
           '<div><label>N° facture TRC</label><input type="text" data-field="wizard.motos.' + i + '.factureTRC" value="' + escapeHtml(m.factureTRC) + '"></div>' +
         '</div>' +
         '<div class="status">' + statusHtml + ' ' + avoirPreview + '</div>' +
@@ -1189,13 +1210,13 @@
     var w = state.wizard;
     var total = w.motos.reduce(function(s,m){ return s + proAvoirForRemise(m.remise); }, 0);
     var rows = w.motos.map(function(m){
-      return '<tr><td class="mono">' + escapeHtml(m.check ? m.check.vin : normalizeVin(m.vin)) + '</td><td>' + escapeHtml(m.achatDate) + '</td><td>' + escapeHtml(m.remise) + ' %</td><td>' + escapeHtml(m.factureTRC) + '</td><td>' + fmtEUR(proAvoirForRemise(m.remise)) + '</td></tr>';
+      return '<tr><td class="mono">' + escapeHtml(m.check ? m.check.vin : normalizeVin(m.vin)) + '</td><td>' + escapeHtml(m.achatDate) + '</td><td>' + escapeHtml(m.factureTRC) + '</td><td>' + fmtEUR(proAvoirForRemise(m.remise)) + '</td></tr>';
     }).join('');
     return '' +
       '<h2>Récapitulatif</h2>' +
-      '<div class="table-scroll"><table class="admin"><thead><tr><th>VIN</th><th>Date d\'achat</th><th>Remise</th><th>Facture TRC</th><th>Avoir</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<div class="table-scroll"><table class="admin"><thead><tr><th>VIN</th><th>Date d\'achat</th><th>Facture TRC</th><th>Avoir</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
       '<p style="margin-top:14px;"><b>Total avoir estimé : ' + fmtEUR(total) + '</b></p>' +
-      '<p class="hint">Formule appliquée : Avoir = 700 € × (1 − remise déjà accordée). Montant délivré sous forme de bon d\'achat consommable sur kove-racing.com après validation par nos équipes.</p>' +
+      '<p class="hint">L\'avoir correspond à l\'écart entre le prix que vous avez payé pour chaque moto et ce que vous auriez payé au nouveau tarif public de 9 290 € TTC, avec la même remise que sur votre facture. Montant délivré sous forme de bon d\'achat consommable sur kove-racing.com après validation par nos équipes.</p>' +
       '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
       '<button class="btn btn-primary" data-action="submit-pro">Envoyer ma demande</button></div>';
   }
@@ -1378,11 +1399,18 @@
 
     out += '<h3 style="margin-top:18px;">Actions internes</h3>';
     if (t.status === 'valide_cloture' || t.status === 'rejete') {
-      out += '<p class="hint">Dossier clôturé' + (t.totalAvoir ? ' — avoir accordé : ' + fmtEUR(t.totalAvoir) : '') + '. Aucune action possible.</p></div>';
+      out += '<p class="hint">Dossier clôturé' + (t.totalAvoir ? ' — avoir accordé : ' + fmtEUR(t.totalAvoir) : '') + '. Aucune action possible.</p>';
+      if (t.validationNote) out += '<p class="hint">' + escapeHtml(t.validationNote) + '</p>';
+      out += '</div>';
       return out;
     }
     if (state.admin.actionError) out += '<div class="msg error" role="alert">' + escapeHtml(state.admin.actionError) + '</div>';
-    out += '<label class="checkbox-row"><input type="checkbox" data-field-checkbox="admin.fraudCheck" ' + (state.admin.fraudCheck?'checked':'') + '>Nom / adresse concordants entre facture, carte grise et livraison</label>';
+    var fc = state.admin.fraudCheck;
+    out += '<fieldset style="border:0;padding:0;margin:0;"><legend class="hint" style="margin-bottom:6px;">Contrôle de concordance (nom / adresse entre facture, carte grise et livraison)</legend>';
+    out += '<label class="checkbox-row"><input type="radio" name="fraud-check" value="concordant" data-admin-fraud ' + (fc==='concordant'?'checked':'') + '>Nom / adresse concordants</label>';
+    out += '<label class="checkbox-row"><input type="radio" name="fraud-check" value="ecart" data-admin-fraud ' + (fc==='ecart'?'checked':'') + '>Écart justifié : justificatif complémentaire fourni (déménagement, conjoint, société, LOA…)</label>';
+    if (fc === 'ecart') out += '<div class="field"><label for="f-ecart">Motif de l\'écart (obligatoire)</label><input type="text" id="f-ecart" style="font-family:inherit" maxlength="400" data-field="admin.ecartMotif" value="' + escapeHtml(state.admin.ecartMotif || '') + '"></div>';
+    out += '</fieldset>';
     out += '<div class="cta-row" style="margin-top:12px;">';
     out += '<button class="btn btn-ghost btn-sm" data-action="admin-reject-doc" data-id="' + t.id + '">Marquer un document non conforme</button>';
     out += '<button class="btn btn-primary btn-sm" data-action="admin-validate" data-id="' + t.id + '" ' + (state.admin.fraudCheck ? '' : 'disabled') + '>Valider &amp; clôturer</button>';
@@ -1446,7 +1474,7 @@
     if (n.view === 'track' && !n.tr) state.track.result = null;
     if (n.view === 'admin') {
       var sel = state.admin.authed && n.sel && (REMOTE || findTicket(n.sel)) ? n.sel : null;
-      if (sel !== state.admin.selected) { state.admin.selected = sel; state.admin.fraudCheck = false; state.admin.actionError = ''; }
+      if (sel !== state.admin.selected) { state.admin.selected = sel; state.admin.fraudCheck = false; state.admin.ecartMotif = ''; state.admin.actionError = ''; }
     }
   }
   window.addEventListener('popstate', function(e){
@@ -1481,7 +1509,7 @@
           // l'utilisateur est en train de cliquer serait remplacé et le clic perdu.
           if (JSON.stringify(b) === JSON.stringify(state.wizard.bracket) && box && box.dataset.drawn) return;
           state.wizard.bracket = b;
-          if (box) { box.innerHTML = regFeedbackHtml(b); box.dataset.drawn = '1'; }
+          if (box) { box.innerHTML = regFeedbackHtml(b); box.dataset.drawn = '1'; makeKeyboardReachable(box); }
         };
         el.addEventListener('change', showBracket);
         el.addEventListener('blur', showBracket);
@@ -1491,6 +1519,11 @@
       el.addEventListener('change', function(){
         setPath(state, el.dataset.fieldCheckbox, el.checked);
         render();
+      });
+    });
+    app.querySelectorAll('[data-admin-fraud]').forEach(function(el){
+      el.addEventListener('change', function(){
+        if (el.checked) { state.admin.fraudCheck = el.value; state.admin.actionError = ''; render(); }
       });
     });
     app.querySelectorAll('[data-upload]').forEach(function(el){
@@ -1519,11 +1552,7 @@
         });
       });
     });
-    app.querySelectorAll('[data-action]').forEach(function(el){
-      if (el.tagName === 'BUTTON') return;
-      el.tabIndex = 0;
-      if (el.tagName !== 'TR') el.setAttribute('role', 'button');
-    });
+    makeKeyboardReachable(app);
     app.addEventListener('click', onClick);
     app.addEventListener('keydown', onKeydown);
   }
@@ -1548,7 +1577,10 @@
   // Retourne un message d'erreur si l'étape courante ne permet pas d'avancer, sinon ''.
   function stepError(w){
     if (w.profile === 'particulier') {
-      if (w.step === 1) return (w.bracket && (w.bracket.bracket === 'lt60' || w.bracket.bracket === '60to90')) ? '' : 'Date d\'immatriculation non éligible.';
+      if (w.step === 1) {
+        if (!(w.bracket && (w.bracket.bracket === 'lt60' || w.bracket.bracket === '60to90'))) return 'Date d\'immatriculation non éligible.';
+        return w.compChoice === 'pack' || w.compChoice === 'avoir' ? '' : 'Choisissez votre compensation : pack de bagagerie ou avoir.';
+      }
       if (w.step === 2) return 'Merci de vérifier votre numéro de série.';
       if (w.step === 3) return w.country === 'fr' ? '' : 'Opération réservée à la France métropolitaine.';
       if (w.step === 4) { var miss = validateParticulierDocs(w); return miss.length ? missingMsg(miss) : ''; }
@@ -1595,7 +1627,18 @@
     Store.adminRefresh(sel).catch(adminError).then(function(){ if (state.view === 'admin' && state.admin.selected === sel) render(); });
   }
 
+  // Les éléments cliquables qui ne sont pas des <button> deviennent atteignables au clavier.
+  function makeKeyboardReachable(root){
+    root.querySelectorAll('[data-action]').forEach(function(el){
+      if (el.tagName === 'BUTTON') return;
+      el.tabIndex = 0;
+      if (el.tagName !== 'TR') el.setAttribute('role', 'button');
+    });
+  }
+
   function onClick(e){
+    // Second clic d'un double-clic : l'écran a souvent déjà changé, il tomberait sur autre chose.
+    if (e.detail > 1) return;
     var el = e.target.closest('[data-action]');
     if (!el) return;
     var action = el.dataset.action;
@@ -1631,7 +1674,7 @@
           w.errorException = null;
           if (res.reason === 'empty') w.error = 'Merci de saisir un numéro de série.';
           else if (res.reason === 'not_found') { w.error = 'Ce numéro de série ne figure pas dans la liste des motos concernées par cette opération.'; w.errorException = 'vin_non_reconnu'; }
-          else if (res.reason === 'container_too_old') { w.error = 'Votre moto provient d\'un lot de production antérieur au container 25, non inclus dans cette opération (container ' + res.container + ').'; w.errorException = 'container_trop_ancien'; }
+          else if (res.reason === 'container_too_old') { w.error = 'Votre moto ne fait pas partie des séries de production concernées par cette baisse.'; w.errorException = 'container_trop_ancien'; }
           else if (res.reason === 'locked') w.error = 'Un dossier est déjà en cours pour ce numéro de série' + (res.ts ? ' (ouvert le ' + fmtDate(res.ts) + ')' : '') + '. Merci de patienter ou de nous contacter si vous pensez qu\'il s\'agit d\'une erreur.';
           else { w.ticket = null; w.token = null; w.error = 'Votre dossier a expiré. Merci de vérifier à nouveau votre numéro de série.'; }
           if (res.reason !== 'locked') w.vinResult = null;
@@ -1647,6 +1690,7 @@
         render();
       }).catch(function(e){ w.errorException = null; w.error = serverErrorMsg(e); render(); }));
     }
+    else if (action === 'pick-comp') { w.compChoice = el.dataset.value; w.formError = ''; render(); }
     else if (action === 'pick-country') { w.country = el.dataset.value; w.formError = ''; render(); }
     else if (action === 'open-exception') {
       var ctxVin = normalizeVin(w.vin);
@@ -1761,7 +1805,7 @@
     else if (action === 'admin-open' || el.closest('tr[data-action="admin-open"]')) {
       var trEl = el.closest('tr[data-action="admin-open"]');
       if (trEl) {
-        state.admin.selected = trEl.dataset.id; state.admin.fraudCheck = false; state.admin.actionError = '';
+        state.admin.selected = trEl.dataset.id; state.admin.fraudCheck = false; state.admin.ecartMotif = ''; state.admin.actionError = '';
         render();
         adminReload();
       }
@@ -1773,7 +1817,12 @@
       if (!t || isClosed(t)) { render(); return; }
       state.admin.actionError = '';
       if (action === 'admin-validate') {
-        if (!state.admin.fraudCheck) { state.admin.actionError = 'Cochez le contrôle de concordance avant de valider.'; render(); return; }
+        if (!state.admin.fraudCheck) { state.admin.actionError = 'Renseignez le contrôle de concordance avant de valider.'; render(); return; }
+        if (state.admin.fraudCheck === 'ecart') {
+          var motif = String(state.admin.ecartMotif || '').trim();
+          if (!motif) { state.admin.actionError = 'Indiquez le motif de l\'écart et le justificatif fourni avant de valider.'; render(); return; }
+          opts.reason = 'Écart justifié : ' + motif;
+        }
       }
       else if (action === 'admin-reject-doc') {
         var reason = prompt('Motif du rejet (ex: photo illisible, document incomplet) :');
