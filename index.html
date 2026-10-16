@@ -1359,7 +1359,13 @@
       '<h2 class="mono">' + escapeHtml(t.id) + '</h2>' + statusBadge(t.status);
     out += '<dl class="recap">';
     out += '<dt>Profil</dt><dd>' + escapeHtml(t.profile) + (t.proSituation ? (' — ' + escapeHtml(t.proSituation)) : '') + '</dd>';
-    if (t.profile === 'particulier' && t.coords) {
+    if (t.purgedAt) {
+      // Dossier anonymisé 90 jours après la clôture : seuls restent le VIN (toujours verrouillé) et le montant.
+      out += '<dt>VIN</dt><dd>' + ((t.vins || []).map(escapeHtml).join(', ') || '—') + '</dd>';
+      if (t.compensation) out += '<dt>Compensation</dt><dd>' + escapeHtml(t.compensation.label) + '</dd>';
+      if (t.totalAvoir) out += '<dt>Avoir</dt><dd>' + fmtEUR(t.totalAvoir) + '</dd>';
+      out += '<dt>Données</dt><dd>Données personnelles et justificatifs supprimés le ' + new Date(t.purgedAt).toLocaleDateString('fr-FR') + ' (conservation de 90 jours après la clôture)</dd>';
+    } else if (t.profile === 'particulier' && t.coords) {
       out += '<dt>VIN</dt><dd>' + escapeHtml(t.vin) + ' (container ' + t.container + ')</dd>';
       out += '<dt>Immatriculation</dt><dd>' + escapeHtml(t.regDate) + ' — ' + t.diffDays + ' j</dd>';
       out += '<dt>Nom</dt><dd>' + escapeHtml(t.coords.prenom) + ' ' + escapeHtml(t.coords.nom) + '</dd>';
