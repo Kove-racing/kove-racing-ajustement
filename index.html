@@ -772,7 +772,7 @@
     admin: initAdmin(),
     privacyFrom: 'home'
   };
-  function initAdmin(){ return { authed:false, email:'', passInput:'', passError:'', selected:null, filter:'all', cap:null }; }
+  function initAdmin(){ return { authed:false, email:'', passInput:'', passError:'', selected:null, filter:'a_traiter', search:'', cap:null }; }
 
   var app = document.getElementById('app');
 
@@ -1323,6 +1323,43 @@
     return '<span class="badge ' + m[0] + '">' + m[1] + '</span>';
   }
 
+  var ADMIN_FILTERS = {
+    a_traiter:   { label: 'À traiter',           test: function(t){ return t.status === 'en_cours' || t.status === 'exception_manuelle'; } },
+    documents:   { label: 'Document à renvoyer', test: function(t){ return t.status === 'documents_rejetes'; } },
+    clotures:    { label: 'Clôturés',            test: function(t){ return t.status === 'valide_cloture' || t.status === 'rejete'; } },
+    non_envoyes: { label: 'Non envoyés',         test: function(t){ return t.status === 'verification'; } },
+    tous:        { label: 'Tous',                test: function(){ return true; } }
+  };
+  // Résumé d'un dossier pour la liste : le serveur envoie déjà ces champs, la démonstration les déduit du dossier complet.
+  function adminSummary(t){
+    var c = t.coords || {}, pc = t.proCoords || {}, ex = t.exceptionRequest || {};
+    return {
+      nom: t.nom || ((c.prenom || '') + ' ' + (c.nom || '')).trim() || pc.raisonSociale || ex.nom || '',
+      email: t.email || c.email || pc.email || ex.email || '',
+      vins: t.vins || (t.motos ? t.motos.map(function(m){ return m.vin; }) : (t.vin || ex.vin ? [t.vin || ex.vin] : [])),
+      montant: t.totalAvoir ? fmtEUR(t.totalAvoir) : (typeof t.compensation === 'string' ? t.compensation : (t.compensation && t.compensation.label) || '')
+    };
+  }
+  function adminListBodyHtml(tickets){
+    var a = state.admin, filter = ADMIN_FILTERS[a.filter] ? a.filter : 'a_traiter';
+    var q = String(a.search || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    var list = tickets.filter(ADMIN_FILTERS[filter].test).filter(function(t){
+      if (!q) return true;
+      var s = adminSummary(t);
+      return [t.id, s.nom, s.email].concat(s.vins).join(' ').toLowerCase().indexOf(q) !== -1;
+    });
+    if (!list.length) return '<p class="lede">' + (q ? 'Aucun dossier ne correspond à cette recherche.' : 'Aucun dossier dans cette catégorie.') + '</p>';
+    var rows = list.map(function(t){
+      var s = adminSummary(t);
+      return '<tr data-action="admin-open" data-id="' + escapeHtml(t.id) + '"><td class="mono">' + escapeHtml(t.id) + '</td>' +
+        '<td>' + escapeHtml(s.nom || '—') + '<br><span class="hint">' + escapeHtml(t.profile) + (s.email ? ' · ' + escapeHtml(s.email) : '') + '</span></td>' +
+        '<td class="mono">' + (s.vins.length ? s.vins.map(escapeHtml).join('<br>') : '—') + '</td>' +
+        '<td>' + statusBadge(t.status) + (s.montant ? '<br><span class="hint">' + escapeHtml(s.montant) + '</span>' : '') + '</td>' +
+        '<td>' + fmtDate(t.updatedAt) + '</td></tr>';
+    }).join('');
+    return '<div class="table-scroll"><table class="admin"><thead><tr><th>Dossier</th><th>Client</th><th>VIN</th><th>Statut</th><th>MàJ</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+  }
+
   function renderAdmin(){
     var a = state.admin;
     if (!a.authed) {
@@ -1340,11 +1377,17 @@
     }
     if (a.selected) return renderAdminDetail(a.selected);
     var tickets = Store.adminList();
-    var rows = tickets.map(function(t){
-      return '<tr data-action="admin-open" data-id="' + escapeHtml(t.id) + '"><td class="mono">' + escapeHtml(t.id) + '</td><td>' + escapeHtml(t.profile) + '</td><td>' + statusBadge(t.status) + '</td><td>' + fmtDate(t.updatedAt) + '</td></tr>';
+    var filter = ADMIN_FILTERS[a.filter] ? a.filter : 'a_traiter';
+    var tabs = Object.keys(ADMIN_FILTERS).map(function(k){
+      var n = tickets.filter(ADMIN_FILTERS[k].test).length;
+      return '<button class="btn btn-sm ' + (k === filter ? 'btn-primary' : 'btn-ghost') + '" data-action="admin-filter" data-value="' + k + '" aria-pressed="' + (k === filter) + '">' + ADMIN_FILTERS[k].label + ' (' + n + ')</button>';
     }).join('');
     return '<div class="card"><h2>Dossiers (' + tickets.length + ')</h2>' +
-      (tickets.length ? '<div class="table-scroll"><table class="admin"><thead><tr><th>ID</th><th>Profil</th><th>Statut</th><th>MàJ</th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="lede">' + (REMOTE ? 'Aucun dossier pour l\'instant.' : 'Aucun dossier enregistré dans ce navigateur pour l\'instant.') + '</p>') +
+      (tickets.length ?
+        '<div class="cta-row" role="group" aria-label="Filtrer par statut" style="flex-wrap:wrap;margin-bottom:12px;">' + tabs + '</div>' +
+        '<div class="field"><label for="admin-search">Rechercher (n° de dossier, nom, email, VIN)</label><input id="admin-search" type="search" autocomplete="off" style="font-family:inherit" data-admin-search value="' + escapeHtml(a.search || '') + '"></div>' +
+        '<div id="admin-list-body">' + adminListBodyHtml(tickets) + '</div>'
+        : '<p class="lede">' + (REMOTE ? 'Aucun dossier pour l\'instant.' : 'Aucun dossier enregistré dans ce navigateur pour l\'instant.') + '</p>') +
       (state.admin.actionError ? '<div class="msg error" role="alert">' + escapeHtml(state.admin.actionError) + '</div>' : '') +
       (a.cap ? '<p class="hint" style="margin-top:14px;">Plafond interne indicatif pour les demandes exceptionnelles : ' + escapeHtml(a.cap) + ' € HT / moto (information interne, non communiquée au client).</p>' : '') +
       '<div class="nav-row"><button class="btn btn-ghost" data-action="go-home">← Accueil</button><button class="btn btn-ghost" data-action="admin-logout">Se déconnecter</button></div></div>';
@@ -1530,6 +1573,14 @@
       el.addEventListener('change', function(){
         setPath(state, el.dataset.fieldCheckbox, el.checked);
         render();
+      });
+    });
+    app.querySelectorAll('[data-admin-search]').forEach(function(el){
+      // Filtre en direct : on ne redessine que le tableau, pour garder le focus dans le champ.
+      el.addEventListener('input', function(){
+        state.admin.search = el.value;
+        var box = document.getElementById('admin-list-body');
+        if (box) { box.innerHTML = adminListBodyHtml(Store.adminList()); makeKeyboardReachable(box); }
       });
     });
     app.querySelectorAll('[data-admin-fraud]').forEach(function(el){
@@ -1833,6 +1884,7 @@
         adminReload();
       }
     }
+    else if (action === 'admin-filter') { state.admin.filter = el.dataset.value; render(); }
     else if (action === 'admin-back') { state.admin.selected = null; state.admin.actionError = ''; render(); adminReload(); }
     else if (/^admin-(validate|reject-doc|grant-exception|close-nosuite)$/.test(action)) {
       if (!state.admin.authed) return;
