@@ -462,6 +462,20 @@
   function markVinSubmitted(vin){ var l = cleanExpiredLocks(); if (l[vin]){ l[vin].status = 'dossier_en_cours'; saveLocks(l); } }
   function releaseVin(vin, ticketId){ var l = cleanExpiredLocks(); if (l[vin] && l[vin].ticketId === ticketId){ delete l[vin]; saveLocks(l); } }
   function isVinLockedByOther(vin, ticketId){ var lk = isVinLocked(vin); return lk && lk.ticketId !== ticketId ? lk : null; }
+  function isTicketClosed(id){ var t = findTicket(id); return !!(t && (t.status === 'valide_cloture' || t.status === 'rejete')); }
+  // Autre dossier qui utilise déjà ce VIN (verrou actif, ou VIN présent dans un dossier envoyé, même hors liste). Les clôturés d'abord.
+  function vinOwner(vin, exceptId){
+    var lk = isVinLockedByOther(vin, exceptId);
+    var found = getTickets().filter(function(t){
+      if (t.id === exceptId) return false;
+      if (lk && lk.ticketId === t.id) return true;
+      if (t.status === 'verification') return false;
+      return t.vin === vin || (t.exceptionRequest && t.exceptionRequest.vin === vin) ||
+        (Array.isArray(t.motos) && t.motos.some(function(m){ return m && m.vin === vin; }));
+    });
+    found.sort(function(a, b){ return (isTicketClosed(b.id) ? 1 : 0) - (isTicketClosed(a.id) ? 1 : 0); });
+    return found[0] || (lk ? { id: lk.ticketId, status: '' } : null);
+  }
 
   /* ---------- accès aux données ----------
      Toutes les lectures / écritures de dossiers passent par Store (promesses).
@@ -473,7 +487,7 @@
     return {
       checkVin: function(vinRaw, mode){
         var r = checkVinEligibility(vinRaw, mode);
-        if (r.ok) { var lk = isVinLocked(r.vin); r.locked = lk ? { ts: lk.ts } : null; }
+        if (r.ok) { var lk = isVinLocked(r.vin); r.locked = lk ? { ts: lk.ts, closed: isTicketClosed(lk.ticketId) } : null; }
         return P(r);
       },
       reserveVin: function(vinRaw, ticket){
@@ -481,7 +495,7 @@
         if (!res.ok) return P(res);
         var ownId = ticket ? ticket.id : null;
         var lock = isVinLockedByOther(res.vin, ownId);
-        if (lock) return P({ ok:false, reason:'locked', vin: res.vin, ts: lock.ts });
+        if (lock) return P({ ok:false, reason:'locked', vin: res.vin, ts: lock.ts, closed: isTicketClosed(lock.ticketId) });
         if (ticket && ticket.vin !== res.vin) {
           // Le client a changé de VIN : on libère l'ancien et on garde le même dossier.
           releaseVin(ticket.vin, ticket.id);
@@ -519,19 +533,23 @@
         return P({ ok:true, ticket: ticket });
       },
       submitException: function(ex, w){
-        var ctx = ex.context || {};
+        var ctx = ex.context || {}, vin = normalizeVin(ex.vin);
+        if (!vin) return P({ ok:false, reason:'vin_required' });
         // Si un dossier « vérification » existe déjà pour ce parcours, la demande le remplace (pas de dossier orphelin).
         var reuse = w.ticket && w.ticket.status === 'verification';
+        var owner = vinOwner(vin, reuse ? w.ticket.id : null);
+        if (owner) return P({ ok:false, reason:'vin_taken', closed: isTicketClosed(owner.id) });
+        if (reuse && w.ticket.vin && w.ticket.vin !== vin) releaseVin(w.ticket.vin, w.ticket.id);   // VIN corrigé dans la demande
         var id = reuse ? w.ticket.id : nextTicketId();
         var t = {
           id: id, createdAt: reuse ? w.ticket.createdAt : Date.now(), profile: w.profile || 'inconnu', status: 'exception_manuelle',
           exceptionRequest: {
             reasonLabel: ex.reasonLabel, nom: ex.nom.trim(), email: ex.email.trim(), telephone: ex.telephone.trim(), message: ex.message.trim(),
-            vin: ctx.vin, container: ctx.container, regDate: ctx.regDate, diffDays: ctx.diffDays, country: ctx.country
+            vin: vin, container: VIN_DB[vin] || null, regDate: ctx.regDate, diffDays: ctx.diffDays, country: ctx.country
           }
         };
         if (!upsertTicket(t)) return P({ ok:false, reason:'storage' });
-        if (ctx.vin && VIN_DB[ctx.vin] && !isVinLockedByOther(ctx.vin, id)) { lockVin(ctx.vin, id); markVinSubmitted(ctx.vin); }
+        if (VIN_DB[vin]) { lockVin(vin, id); markVinSubmitted(vin); }
         return P({ ok:true, id: id });
       },
       track: function(id, contact){
@@ -655,7 +673,7 @@
         var reuse = w.ticket && w.ticket.status === 'verification';
         return rpc('submit_exception', { p_ticket_id: reuse ? w.ticket.id : null, p_token: reuse ? w.token : null, p_data: {
           reasonLabel: ex.reasonLabel, nom: ex.nom, email: ex.email, telephone: ex.telephone, message: ex.message, profile: w.profile || '',
-          vin: ctx.vin, regDate: ctx.regDate, country: ctx.country } });
+          vin: normalizeVin(ex.vin), regDate: ctx.regDate, country: ctx.country } });
       },
       track: function(id, contact){ return rpc('track_ticket', { p_id: id, p_contact: contact }); },
       resubmit: function(result, contact, up){
@@ -712,6 +730,7 @@
   function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   // Écart en jours calendaires (insensible aux changements d'heure été / hiver).
   function daysSince(dateStr){ var p = String(dateStr).split('-'), now = new Date(); return Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(+p[0], +p[1]-1, +p[2])) / 864e5); }
+  var CLOSED_VIN_MSG = 'Ce numéro de série a déjà fait l\'objet d\'un dossier, aujourd\'hui clôturé. Il ne peut pas être utilisé pour une nouvelle demande.';
   function normalizeVin(v){ return String(v||'').replace(/[\s\-.]/g, '').toUpperCase(); }
   function normalizePhone(p){ var d = String(p||'').replace(/[^\d+]/g, ''); if (d.indexOf('+33') === 0) d = '0' + d.slice(3); else if (d.indexOf('0033') === 0) d = '0' + d.slice(4); return d.replace(/\D/g, ''); }
   function isValidEmail(e){ return /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]{2,}$/.test(String(e||'').trim()); }
@@ -761,7 +780,7 @@
       error: '', fileError: '', formError: ''
     };
   }
-  function initException(){ return { open:false, reasonLabel:'', nom:'', email:'', telephone:'', message:'', sent:false, error:'', ticketId:'' }; }
+  function initException(){ return { open:false, reasonLabel:'', vin:'', nom:'', email:'', telephone:'', message:'', sent:false, error:'', ticketId:'' }; }
   var state = {
     view: 'home',
     wizard: initWizard(),
@@ -829,6 +848,7 @@
   }
   function validateException(e){
     var missing = [];
+    if (!normalizeVin(e.vin)) missing.push('le numéro de série (VIN) de votre moto');
     if (!e.nom.trim()) missing.push('votre nom');
     if (!isValidEmail(e.email)) missing.push('une adresse email valide');
     if (e.telephone.trim() && !isValidPhone(e.telephone)) missing.push('un numéro de téléphone valide (ou laissez le champ vide)');
@@ -1164,6 +1184,7 @@
         if (m.check.ok) statusHtml = '<span class="badge ok">Éligible</span>';
         else if (m.check.reason === 'not_found') statusHtml = '<span class="badge bad">VIN non reconnu</span>';
         else if (m.check.reason === 'container_too_old') statusHtml = '<span class="badge bad">Hors périmètre : ne fait pas partie des séries concernées</span>';
+        else if (m.check.reason === 'closed') statusHtml = '<span class="badge bad">Déjà traité dans un dossier clôturé</span>';
         else if (m.check.reason === 'locked') statusHtml = '<span class="badge pending">Dossier déjà en cours pour ce VIN</span>';
         else if (m.check.reason === 'duplicate') statusHtml = '<span class="badge bad">VIN déjà saisi sur une autre ligne de ce dossier</span>';
         else if (m.check.reason === 'date_future') statusHtml = '<span class="badge bad">Date d\'achat dans le futur</span>';
@@ -1241,6 +1262,7 @@
       '<h2>Demande exceptionnelle</h2>' +
       '<p class="lede">Votre dossier ne remplit pas les critères automatiques de cette opération. Vous pouvez néanmoins soumettre une demande, qui sera étudiée au cas par cas par nos équipes.</p>' +
       (e.error ? '<div class="msg error" role="alert">' + escapeHtml(e.error) + '</div>' : '') +
+      '<div class="field"><label>Numéro de série (VIN)</label><input type="text" data-field="exception.vin" value="' + escapeHtml(e.vin) + '" placeholder="LB7SSD..." maxlength="25" autocomplete="off"><span class="hint">Repère E de la carte grise. Obligatoire.</span></div>' +
       '<div class="field"><label>Nom</label><input type="text" style="font-family:inherit" data-field="exception.nom" value="' + escapeHtml(e.nom) + '"></div>' +
       '<div class="row2">' +
         '<div class="field"><label>Email</label><input type="email" style="font-family:inherit" data-field="exception.email" value="' + escapeHtml(e.email) + '"></div>' +
@@ -1729,6 +1751,7 @@
           if (res.reason === 'empty') w.error = 'Merci de saisir un numéro de série.';
           else if (res.reason === 'not_found') { w.error = 'Ce numéro de série ne figure pas dans la liste des motos concernées par cette opération.'; w.errorException = 'vin_non_reconnu'; }
           else if (res.reason === 'container_too_old') { w.error = 'Votre moto ne fait pas partie des séries de production concernées par cette baisse.'; w.errorException = 'container_trop_ancien'; }
+          else if (res.reason === 'locked' && res.closed) w.error = CLOSED_VIN_MSG;
           else if (res.reason === 'locked') w.error = 'Un dossier est déjà en cours pour ce numéro de série' + (res.ts ? ' (ouvert le ' + fmtDate(res.ts) + ')' : '') + '. Merci de patienter ou de nous contacter si vous pensez qu\'il s\'agit d\'une erreur.';
           else { w.ticket = null; w.token = null; w.error = 'Votre dossier a expiré. Merci de vérifier à nouveau votre numéro de série.'; }
           if (res.reason !== 'locked') w.vinResult = null;
@@ -1750,6 +1773,7 @@
       state.exception = initException();
       state.exception.open = true;
       state.exception.reasonLabel = el.dataset.value;
+      state.exception.vin = ctxVin;
       state.exception.context = {
         vin: ctxVin || '', container: ctxVin ? (VIN_DB[ctxVin] || null) : null,
         regDate: w.regDate || '', diffDays: w.bracket ? w.bracket.diffDays : null, country: w.country || ''
@@ -1763,7 +1787,10 @@
       if (missE.length) { ex.error = missingMsg(missE); render(); return; }
       busy(Store.submitException(ex, w).then(function(r){
         if (!r || !r.ok) {
-          ex.error = r && r.reason === 'storage' ? 'Impossible d\'enregistrer la demande (espace de stockage du navigateur plein).' : 'Demande incomplète : vérifiez les champs ci-dessus.';
+          ex.error = r && r.reason === 'storage' ? 'Impossible d\'enregistrer la demande (espace de stockage du navigateur plein).'
+            : r && r.reason === 'vin_required' ? 'Merci de renseigner le numéro de série (VIN) de votre moto.'
+            : r && r.reason === 'vin_taken' ? (r.closed ? CLOSED_VIN_MSG : 'Un dossier existe déjà pour ce numéro de série. Utilisez « Suivre mon dossier » ou contactez-nous.')
+            : 'Demande incomplète : vérifiez les champs ci-dessus.';
           render(); return;
         }
         w.ticket = null; w.token = null;
@@ -1781,7 +1808,7 @@
         if (r.ok) {
           var dup = w.motos.some(function(o, j){ return o !== m && normalizeVin(o.vin) === r.vin; });
           if (dup) m.check = { ok:false, reason:'duplicate', vin: r.vin };
-          else if (r.locked) m.check = { ok:false, reason:'locked', vin: r.vin };
+          else if (r.locked) m.check = { ok:false, reason: r.locked.closed ? 'closed' : 'locked', vin: r.vin };
           else if (m.achatDate && m.achatDate > todayISO()) m.check = { ok:false, reason:'date_future', vin: r.vin };
           else m.check = { ok:true, vin: r.vin, container: r.container };
         } else m.check = r;
