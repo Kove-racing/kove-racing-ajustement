@@ -731,7 +731,9 @@
   function todayISO(){ var d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
   function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
   // Écart en jours calendaires (insensible aux changements d'heure été / hiver).
-  function daysSince(dateStr){ var p = String(dateStr).split('-'), now = new Date(); return Math.round((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(+p[0], +p[1]-1, +p[2])) / 864e5); }
+  function daysBetween(fromStr, toStr){ var a = String(fromStr).split('-'), b = String(toStr).split('-'); return Math.round((Date.UTC(+b[0], +b[1]-1, +b[2]) - Date.UTC(+a[0], +a[1]-1, +a[2])) / 864e5); }
+  // L'ancienneté de la carte grise se compte jusqu'à cette date fixe, pas jusqu'à aujourd'hui.
+  var REG_REF_DATE = '2026-10-19', REG_REF_LABEL = '19/10/2026';
   var CLOSED_VIN_MSG = 'Ce numéro de série a déjà fait l\'objet d\'un dossier, aujourd\'hui clôturé. Il ne peut pas être utilisé pour une nouvelle demande.';
   function normalizeVin(v){ return String(v||'').replace(/[\s\-.]/g, '').toUpperCase(); }
   function normalizePhone(p){ var d = String(p||'').replace(/[^\d+]/g, ''); if (d.indexOf('+33') === 0) d = '0' + d.slice(3); else if (d.indexOf('0033') === 0) d = '0' + d.slice(4); return d.replace(/\D/g, ''); }
@@ -809,8 +811,9 @@
   /* ---------- compensation logic ---------- */
   function regBracket(dateStr){
     if (!dateStr) return null;
-    var diff = daysSince(dateStr);
-    if (diff < 0) return { bracket:'invalid', diffDays: diff };
+    var diff = daysBetween(dateStr, REG_REF_DATE);
+    if (dateStr > todayISO()) return { bracket:'invalid', diffDays: diff };
+    if (diff < 0) return { bracket:'after_ref', diffDays: diff };
     if (diff <= 60) return { bracket:'lt60', diffDays: diff };
     if (diff <= 90) return { bracket:'60to90', diffDays: diff };
     return { bracket:'gt90', diffDays: diff };
@@ -1025,12 +1028,14 @@
     if (b) {
       if (b.bracket === 'invalid') {
         out += '<div class="msg error" role="alert">Cette date est postérieure à aujourd\'hui, merci de la corriger.</div>';
+      } else if (b.bracket === 'after_ref') {
+        out += '<div class="msg error" role="alert">Votre carte grise est postérieure au ' + REG_REF_LABEL + ' : cette immatriculation n\'est pas concernée par l\'opération. Vous pouvez toutefois déposer une demande exceptionnelle, étudiée au cas par cas.<br><br><button class="btn btn-ghost btn-sm" data-action="open-exception" data-value="hors_delai">Faire une demande exceptionnelle</button></div>';
       } else if (b.bracket === 'lt60') {
-        out +='<div class="msg ok">Carte grise de moins de 60 jours (' + b.diffDays + ' jours). Vous êtes éligible à : le pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte) + un <b>avoir de 150 €</b> sur kove-racing.com. En cas de rupture de stock de la bagagerie, un avoir de 550 € vous sera proposé en remplacement.</div>';
+        out +='<div class="msg ok">Carte grise de moins de 60 jours au ' + REG_REF_LABEL + ' (' + b.diffDays + ' jours). Vous êtes éligible à : le pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte) + un <b>avoir de 150 €</b> sur kove-racing.com. En cas de rupture de stock de la bagagerie, un avoir de 550 € vous sera proposé en remplacement.</div>';
       } else if (b.bracket === '60to90') {
-        out +='<div class="msg ok">Carte grise de 60 à 90 jours (' + b.diffDays + ' jours). Vous êtes éligible au pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte). En cas de rupture de stock, un avoir de 175 € vous sera proposé en remplacement.</div>';
+        out +='<div class="msg ok">Carte grise de 60 à 90 jours au ' + REG_REF_LABEL + ' (' + b.diffDays + ' jours). Vous êtes éligible au pack de bagagerie <b>Westwind Ranger Wilds Enduro RW 80</b> (coloris Sable ou Noir, expédition offerte). En cas de rupture de stock, un avoir de 175 € vous sera proposé en remplacement.</div>';
       } else if (b.bracket === 'gt90') {
-        out += '<div class="msg error" role="alert">Votre carte grise date de plus de 90 jours (' + b.diffDays + ' jours). Cette opération cible les immatriculations récentes. Vous pouvez toutefois déposer une demande exceptionnelle, étudiée au cas par cas.<br><br><button class="btn btn-ghost btn-sm" data-action="open-exception" data-value="hors_delai">Faire une demande exceptionnelle</button></div>';
+        out += '<div class="msg error" role="alert">Votre carte grise avait plus de 90 jours au ' + REG_REF_LABEL + ' (' + b.diffDays + ' jours). Cette opération cible les immatriculations récentes. Vous pouvez toutefois déposer une demande exceptionnelle, étudiée au cas par cas.<br><br><button class="btn btn-ghost btn-sm" data-action="open-exception" data-value="hors_delai">Faire une demande exceptionnelle</button></div>';
       }
     }
     out += '<div class="nav-row"><button class="btn btn-ghost" data-action="wizard-back">← Retour</button>' +
@@ -1125,7 +1130,7 @@
       '<h2>Récapitulatif</h2>' +
       '<dl class="recap">' +
         '<dt>Numéro de série</dt><dd>' + escapeHtml(w.vinResult.vin) + '</dd>' +
-        '<dt>Immatriculation</dt><dd>' + escapeHtml(w.regDate) + ' — ' + b.diffDays + ' jours</dd>' +
+        '<dt>Immatriculation</dt><dd>' + escapeHtml(w.regDate) + ' — ' + b.diffDays + ' jours au ' + REG_REF_LABEL + '</dd>' +
         '<dt>Compensation prévisionnelle</dt><dd>' + compLabel + '</dd>' +
         '<dt>Nom</dt><dd>' + escapeHtml(c.prenom) + ' ' + escapeHtml(c.nom) + '</dd>' +
         '<dt>Contact</dt><dd>' + escapeHtml(c.email) + ' — ' + escapeHtml(c.telephone) + '</dd>' +
